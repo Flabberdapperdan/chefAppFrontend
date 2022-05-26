@@ -15,8 +15,57 @@
       $(function(){
         $("#nav-placeholder").load("navbar/nav.html");
       });
+
+      /*
+      Get all ingredients
+      */
+      $(window).load(function (){
+        let readRequest = new XMLHttpRequest();
+        readRequest.addEventListener("load", readReqListener);
+        readRequest.open("GET", "http://localhost:8080/api/ingredients");
+        readRequest.send();
+      })
+
+      function readReqListener() {
+        console.log(this.responseText);
+        const jsonArray = JSON.parse(this.responseText);
+        document.getElementById("ingredient-list").innerHTML = arrayToTable(jsonArray);
+      }
+
+      function arrayToTable(jsonArray)
+      {
+        let htmlText = "<table>";
+        if(jsonArray.length == 0)
+        {
+          console.log(jsonArray.name + " is empty!");
+          return "";
+        }
+        const keys = Object.keys(jsonArray[0]);
+        htmlText += "<tr>";
+        for(let i in keys)
+        {
+          htmlText += "<td>" + keys[i] + "</td>";
+        }
+        htmlText += "</tr>";
+        let keyCount = keys.length;
+        console.log(keyCount);
+        for(let i in jsonArray)
+        {
+          let jsonObject = jsonArray[i];
+          htmlText += "<tr>";
+          console.log(jsonObject);
+          for(const property in jsonObject)
+          {
+            console.log(property);
+            htmlText += "<td>" + jsonObject[property] + "</td>";
+          }
+          htmlText += "</tr>";
+        }
+        htmlText += "</table>";
+        return htmlText;
+      }
     </script>
   </header>
-  
+  <div id="ingredient-list" style="overflow-x:auto;"></div>
 </body>
 </html>

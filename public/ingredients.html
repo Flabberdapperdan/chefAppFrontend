@@ -16,8 +16,15 @@
         $("#nav-placeholder").load("navbar/nav.html");
       });
 
+      $(window).ready(function(){
+        document.getElementById("ingredient-submit").addEventListener("click", createListener);
+      })
+
+      let keys = [];
+      let ignore = [];
+      let editMode = false;
       /*
-      Get all ingredients
+      Get (read) all ingredients
       */
       $(window).load(function (){
         let readRequest = new XMLHttpRequest();
@@ -26,10 +33,14 @@
         readRequest.send();
       })
 
-      function readReqListener() {
+      function readReqListener()
+      {
         console.log(this.responseText);
         const jsonArray = JSON.parse(this.responseText);
+        keys = Object.keys(jsonArray[0]);
+        locked = ["id", "containedAllergens"];
         document.getElementById("ingredient-list").innerHTML = arrayToTable(jsonArray);
+        populateEventListeners();
       }
 
       function arrayToTable(jsonArray)
@@ -40,7 +51,6 @@
           console.log(jsonArray.name + " is empty!");
           return "";
         }
-        const keys = Object.keys(jsonArray[0]);
         htmlText += "<tr>";
         for(let i in keys)
         {
@@ -52,20 +62,164 @@
         for(let i in jsonArray)
         {
           let jsonObject = jsonArray[i];
-          htmlText += "<tr>";
+          htmlText += "<tr id=" + jsonObject["id"] + " + >";
           console.log(jsonObject);
           for(const property in jsonObject)
           {
             console.log(property);
             htmlText += "<td>" + jsonObject[property] + "</td>";
           }
+          if(editMode)
+          {
+            htmlText += "<td></td>";
+          }
+          else
+          {
+            htmlText += "<td><input type=\"submit\" class=\"object-edit\" value=\"Edit\"><input type=\"button\" class=\"object-delete\" value=\"Delete\"></td>";
+          }
           htmlText += "</tr>";
         }
+        htmlText += "<tr><form>";
+        for(let i in keys)
+        {
+          if(locked.includes(keys[i]))
+          {
+            htmlText += "<td></td>";
+          }
+          else
+          {
+            htmlText += "<td><input type=\"text\" id=\"" + keys[i] + "\"></td>";
+          }
+        }
+        htmlText += "<td><input type=\"submit\" id=\"object-create\" value=\"Create\"></td>";
+        htmlText += "</form></tr>";
         htmlText += "</table>";
         return htmlText;
       }
+
+      function populateEventListeners()
+      {
+        let createButton = document.getElementById("object-create");
+        createButton.addEventListener("click", createListener);
+        const editButtons = document.getElementsByClassName("object-edit");
+        for(let i in editButtons)
+        {
+          editButtons[i].addEventListener("click", editListener);
+        }
+        const deleteButtons = document.getElementsByClassName("object-delete");
+        for(let i in deleteButtons)
+        {
+          deleteButtons[i].addEventListener("click", deleteListener);
+        }
+      }
+
+      /*
+      Post (create) an ingredient
+      */
+
+      function createListener()
+      {
+        //alert(this.parentElement.parentElement.id);
+        let body = "{";
+        const keyValues = [];
+        for(let i in keys)
+        {
+          if(locked.includes(keys[i]))
+          {
+            continue;
+          }
+          let keyValue = "\"" + keys[i] + "\":\"" + document.getElementById(keys[i]).value + "\"";
+          keyValues.push(keyValue);
+        }
+        body += keyValues.toString();
+        body += "}";
+        let createRequest = new XMLHttpRequest();
+        createRequest.addEventListener("load", createReqListener);
+        createRequest.open("POST", "http://localhost:8080/api/ingredients", true);
+        createRequest.setRequestHeader("Content-Type", "application/json");
+        createRequest.send(body);
+      }
+
+      function createReqListener()
+      {
+        location.reload();
+      }
+
+      /*
+      Put (update) an ingredient
+      */
+
+      function editListener()
+      {
+        //alert(this.parentElement.parentElement.id);
+        let rowElement = this.parentElement.parentElement;
+        let htmlText = "<form>";
+        for(i in keys)
+        {
+          if(locked.includes(keys[i]))
+          {
+            htmlText += "<td>" + rowElement.children[i].innerHTML + "</td>";
+          }
+          else
+          {
+            htmlText += "<td><input type=\"text\" id=\"" + keys[i] + "\" value=\"" + rowElement.children[i].innerHTML + "\"></td>";
+          }
+        }
+        htmlText += "<td><input type=\"submit\" id=\"object-update\" value=\"Update\"></td>";
+        htmlText += "</form>";
+        rowElement.innerHTML = htmlText;
+        let updateButton = document.getElementById("object-update");
+        updateButton.addEventListener("click", updateListener);
+      }
+
+      function updateListener()
+      {
+        //alert(this.parentElement.parentElement.id);
+        let body = "{";
+        const keyValues = [];
+        for(let i in keys)
+        {
+          if(locked.includes(keys[i]))
+          {
+            continue;
+          }
+          let keyValue = "\"" + keys[i] + "\":\"" + document.getElementById(keys[i]).value + "\"";
+          keyValues.push(keyValue);
+        }
+        body += keyValues.toString();
+        body += "}";
+        let updateRequest = new XMLHttpRequest();
+        updateRequest.addEventListener("load", updateReqListener);
+        updateRequest.open("PUT", "http://localhost:8080/api/ingredients/" + this.parentElement.parentElement.id, true);
+        updateRequest.setRequestHeader("Content-Type", "application/json");
+        updateRequest.send(body);
+      }
+
+      function updateReqListener()
+      {
+        location.reload();
+      }
+
+      /*
+      Delete an ingredient
+      */
+
+      function deleteListener()
+      {
+        //alert(this.parentElement.parentElement.id);
+        let deleteRequest = new XMLHttpRequest();
+        deleteRequest.addEventListener("load", deleteReqListener);
+        deleteRequest.open("DELETE", "http://localhost:8080/api/ingredients/" + this.parentElement.parentElement.id);
+        deleteRequest.send();
+      }
+
+      function deleteReqListener()
+      {
+        location.reload();
+      }
     </script>
   </header>
+  <h1>Ingredients</h1>
   <div id="ingredient-list" style="overflow-x:auto;"></div>
 </body>
 </html>

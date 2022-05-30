@@ -1,3 +1,11 @@
+const deletOne = async (id) => {
+  let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
+    method: 'DELETE'
+  });
+  console.log(JSONResponse);
+  getAll();
+}
+
 const getAll = async () => {
   //fetch
   let JSONData = await fetch("http://localhost:8080/api/recipes");
@@ -13,16 +21,25 @@ const getAll = async () => {
       data : element.id
   });
     let newString = `
-    <tr >
+    <tr>
       <th>${element.name}</th>
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
-      <button>Delete</button>
+      <button data-id="${element.id}" class="recipes-delete-button">Delete</button>
       <button>Adjust</button>
     </tr>
     `;
     newRow.innerHTML = newString;
     resultsTable.appendChild(newRow);
+  }
+
+  //attach delete-event
+  let deleteButtons = document.getElementsByClassName("recipes-delete-button");
+  for (let j = 0; j < deleteButtons.length; j++) {
+    const button = deleteButtons[j];
+    button.addEventListener("click", () => {
+      deletOne(button.dataset.id);
+    })
   }
 }
 
@@ -44,7 +61,6 @@ const handleSubmit = async () => {
     body: JSON.stringify(bodyObject)
   });
   let response = await JSONResponse.json();
-  console.log(response);
 
   getAll();
   nameInput.value = "";

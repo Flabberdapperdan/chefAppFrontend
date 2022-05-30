@@ -5,6 +5,7 @@ main {
   margin-top: 40px;
 }
 
+/* //INPUT SECTION \\ */
 #recipe-form {
   display: flex;
   flex-direction: column;
@@ -42,4 +43,21 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #3f9644;
+}
+
+hr {
+  color: #12290f;
+  width: 70vw;
+}
+
+/* //DISPLAY SECTION \\ */
+#ingredient-result {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#ingredient-result-table {
+  min-width: 90%;
 }

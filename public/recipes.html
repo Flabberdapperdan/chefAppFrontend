@@ -22,17 +22,32 @@
 
   <main>
     <div id="recipe-form">
-      <label>name</label>
+      <label>Naam</label>
       <input id="rfname" type="text"><br>
-      <label>cost</label>
+      <label>Inkoopprijs</label>
       <input id="rfcost" type="text"><br>
-      <label>salesprice</label>
-      <input id="rfcost" type="text"><br>
+      <label>Verkoopprijs</label>
+      <input id="rfsaleprice" type="text"><br>
       <input id="recipe-form-submit" type="submit" value="Ingredient Opslaan">
     </div>
 
-    <div id="ingredient-result">
+    <hr>
 
+    <div id="ingredient-result">
+      <table id="ingredient-result-table">
+        <thead>
+          <tr>
+            <th>Naam</th>
+            <th>Inkoopprijs</th>
+            <th>Verkoopprijs</th>
+          </tr>
+        </thead>
+        <tbody id="ingredient-result-body">
+
+        </tbody>
+
+      </table>
+      
     </div>
 
   </main>

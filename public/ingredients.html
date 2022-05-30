@@ -16,12 +16,11 @@
         $("#nav-placeholder").load("navbar/nav.html");
       });
 
-      $(window).ready(function(){
-        document.getElementById("ingredient-submit").addEventListener("click", createListener);
-      })
+      //$(window).ready(function(){
+      //  document.getElementById("object-create").addEventListener("click", createListener);
+      //})
 
-      let keys = [];
-      let ignore = [];
+      const properties = ["id", "name", "cost"];
       let editMode = false;
       /*
       Get (read) all ingredients
@@ -37,8 +36,6 @@
       {
         console.log(this.responseText);
         const jsonArray = JSON.parse(this.responseText);
-        keys = Object.keys(jsonArray[0]);
-        locked = ["id", "containedAllergens"];
         document.getElementById("ingredient-list").innerHTML = arrayToTable(jsonArray);
         populateEventListeners();
       }
@@ -52,22 +49,20 @@
           return "";
         }
         htmlText += "<tr>";
-        for(let i in keys)
+        for(let i in properties)
         {
-          htmlText += "<td>" + keys[i] + "</td>";
+          htmlText += "<td>" + properties[i] + "</td>";
         }
         htmlText += "</tr>";
-        let keyCount = keys.length;
-        console.log(keyCount);
         for(let i in jsonArray)
         {
           let jsonObject = jsonArray[i];
           htmlText += "<tr id=" + jsonObject["id"] + " + >";
           console.log(jsonObject);
-          for(const property in jsonObject)
+          for(let i in properties)
           {
-            console.log(property);
-            htmlText += "<td>" + jsonObject[property] + "</td>";
+            console.log(properties[i]);
+            htmlText += "<td>" + jsonObject[properties[i]] + "</td>";
           }
           if(editMode)
           {
@@ -75,20 +70,20 @@
           }
           else
           {
-            htmlText += "<td><input type=\"submit\" class=\"object-edit\" value=\"Edit\"><input type=\"button\" class=\"object-delete\" value=\"Delete\"></td>";
+            htmlText += "<td><input type=\"submit\" class=\"object-edit\" value=\"Edit\"></td>";
           }
           htmlText += "</tr>";
         }
-        htmlText += "<tr><form>";
-        for(let i in keys)
+        htmlText += "<tr id=\"new-object\"><form>";
+        for(let i in properties)
         {
-          if(locked.includes(keys[i]))
+          if(properties[i] == "id")
           {
             htmlText += "<td></td>";
           }
           else
           {
-            htmlText += "<td><input type=\"text\" id=\"" + keys[i] + "\"></td>";
+            htmlText += "<td><input type=\"text\" id=\"" + properties[i] + "\"></td>";
           }
         }
         htmlText += "<td><input type=\"submit\" id=\"object-create\" value=\"Create\"></td>";
@@ -102,15 +97,9 @@
         let createButton = document.getElementById("object-create");
         createButton.addEventListener("click", createListener);
         const editButtons = document.getElementsByClassName("object-edit");
-        for(let i in editButtons)
-        {
-          editButtons[i].addEventListener("click", editListener);
-        }
-        const deleteButtons = document.getElementsByClassName("object-delete");
-        for(let i in deleteButtons)
-        {
-          deleteButtons[i].addEventListener("click", deleteListener);
-        }
+        Array.prototype.forEach.call(editButtons, function(editButton) {
+          editButton.addEventListener("click", editListener);
+        });
       }
 
       /*
@@ -121,17 +110,17 @@
       {
         //alert(this.parentElement.parentElement.id);
         let body = "{";
-        const keyValues = [];
-        for(let i in keys)
+        const propertyValues = [];
+        for(let i in properties)
         {
-          if(locked.includes(keys[i]))
+          if(properties[i] == "id")
           {
             continue;
           }
-          let keyValue = "\"" + keys[i] + "\":\"" + document.getElementById(keys[i]).value + "\"";
-          keyValues.push(keyValue);
+          let propertyValue = "\"" + properties[i] + "\":\"" + document.getElementById(properties[i]).value + "\"";
+          propertyValues.push(propertyValue);
         }
-        body += keyValues.toString();
+        body += propertyValues.toString();
         body += "}";
         let createRequest = new XMLHttpRequest();
         createRequest.addEventListener("load", createReqListener);
@@ -153,40 +142,49 @@
       {
         //alert(this.parentElement.parentElement.id);
         let rowElement = this.parentElement.parentElement;
-        let htmlText = "<form>";
-        for(i in keys)
+        //remove the other buttons for now
+        document.getElementById("new-object").remove();
+        const rowElements = rowElement.parentElement.children;
+        for(let i = 0; i < rowElements.length; i++)
         {
-          if(locked.includes(keys[i]))
+          rowElements[i].lastElementChild.innerHTML = "<td></td>";
+        }
+        //construct update form
+        let htmlText = "<form>";
+        for(i in properties)
+        {
+          if(properties[i] == "id")
           {
             htmlText += "<td>" + rowElement.children[i].innerHTML + "</td>";
           }
           else
           {
-            htmlText += "<td><input type=\"text\" id=\"" + keys[i] + "\" value=\"" + rowElement.children[i].innerHTML + "\"></td>";
+            htmlText += "<td><input type=\"text\" id=\"" + properties[i] + "\" value=\"" + rowElement.children[i].innerHTML + "\"></td>";
           }
         }
-        htmlText += "<td><input type=\"submit\" id=\"object-update\" value=\"Update\"></td>";
-        htmlText += "</form>";
+        htmlText += "<td><input type=\"submit\" id=\"object-update\" value=\"Update\">";
+        htmlText += "</form><input type=\"button\" id=\"object-delete\" value=\"Delete\"></td>";
         rowElement.innerHTML = htmlText;
         let updateButton = document.getElementById("object-update");
         updateButton.addEventListener("click", updateListener);
+        let deleteButton = document.getElementById("object-delete");
+        deleteButton.addEventListener("click", deleteListener);
       }
 
       function updateListener()
       {
-        //alert(this.parentElement.parentElement.id);
         let body = "{";
-        const keyValues = [];
-        for(let i in keys)
+        const propertyValues = [];
+        for(let i in properties)
         {
-          if(locked.includes(keys[i]))
+          if(properties[i] == "id")
           {
             continue;
           }
-          let keyValue = "\"" + keys[i] + "\":\"" + document.getElementById(keys[i]).value + "\"";
-          keyValues.push(keyValue);
+          let propertyValue = "\"" + properties[i] + "\":\"" + document.getElementById(properties[i]).value + "\"";
+          propertyValues.push(propertyValue);
         }
-        body += keyValues.toString();
+        body += propertyValues.toString();
         body += "}";
         let updateRequest = new XMLHttpRequest();
         updateRequest.addEventListener("load", updateReqListener);

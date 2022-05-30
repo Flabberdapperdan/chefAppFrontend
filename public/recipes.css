@@ -61,3 +61,9 @@ hr {
 #ingredient-result-table {
   min-width: 90%;
 }
+
+#ingredient-result-table > thead {
+  font-family: 'Raleway', cursive;
+  color: #92a054;
+  border-bottom: solid saddlebrown;
+}

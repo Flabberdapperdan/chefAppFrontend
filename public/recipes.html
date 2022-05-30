@@ -5,11 +5,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="./recipes.js" type="module"></script>
+  <link rel="stylesheet" href="recipes.css">
   <title>Document</title>
 </head>
 <body>
+
   <header>
-    <p>hello</p>
     <div id="nav-placeholder"></div>
     <script>
       $(function(){
@@ -17,6 +19,39 @@
       });
     </script>
   </header>
+
+  <main>
+    <div id="recipe-form">
+      <label>Naam</label>
+      <input id="rfname" type="text"><br>
+      <label>Inkoopprijs</label>
+      <input id="rfcost" type="text"><br>
+      <label>Verkoopprijs</label>
+      <input id="rfsaleprice" type="text"><br>
+      <input id="recipe-form-submit" type="submit" value="Ingredient Opslaan">
+    </div>
+
+    <hr>
+
+    <div id="ingredient-result">
+      <table id="ingredient-result-table">
+        <thead>
+          <tr>
+            <th>Naam</th>
+            <th>Inkoopprijs</th>
+            <th>Verkoopprijs</th>
+          </tr>
+        </thead>
+        <tbody id="ingredient-result-body">
+
+        </tbody>
+
+      </table>
+      
+    </div>
+
+  </main>
+
   
 </body>
 </html>

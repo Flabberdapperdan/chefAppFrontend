@@ -2,7 +2,6 @@ const deletOne = async (id) => {
   let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     method: 'DELETE'
   });
-  console.log(JSONResponse);
   getAll();
 }
 
@@ -10,7 +9,6 @@ const getAll = async () => {
   //fetch
   let JSONData = await fetch("http://localhost:8080/api/recipes");
   let data = await JSONData.json();
-  console.log(data);
   
   //display
   const resultsTable = document.getElementById("ingredient-result-body");

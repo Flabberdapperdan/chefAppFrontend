@@ -1,14 +1,14 @@
-const properties = ["id", "code", "group", "name", "marketPrice"];
+const properties = ["id", "code", "group", "name", "unit"];
 let editMode = false;
 /*
 Get (read) all ingredients
 */
 const readObjects = async () => {
-  let response = await fetch("http://localhost:8080/api/ingredients");
+  let response = await fetch("http://localhost:8080/api/nutrition");
   console.log(response);
   let jsonArray = await response.json();
   console.log(jsonArray);
-  document.getElementById("ingredient-list").innerHTML = arrayToTable(jsonArray);
+  document.getElementById("nutrient-list").innerHTML = arrayToTable(jsonArray);
   populateEventListeners();
 }
 
@@ -88,7 +88,7 @@ const createObject = async () => {
   }
   body += propertyValues.toString();
   body += "}";
-  let response = await fetch("http://localhost:8080/api/ingredients", {
+  let response = await fetch("http://localhost:8080/api/nutrition", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -150,7 +150,7 @@ const updateObject = async (objectId) => {
   }
   body += propertyValues.toString();
   body += "}";
-  let response = await fetch("http://localhost:8080/api/ingredients/" + objectId, {
+  let response = await fetch("http://localhost:8080/api/nutrition/" + objectId, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -165,12 +165,10 @@ Delete an ingredient
 */
 
 const deleteObject = async (objectId) => {
-  let response = await fetch(`http://localhost:8080/api/ingredients/${objectId}`, {
+  let response = await fetch(`http://localhost:8080/api/nutrition/${objectId}`, {
     method: 'DELETE'
   });
   location.reload();
 }
 
 window.onload = readObjects;
-
-// Via NPM of Nodeman hosten-inladen

@@ -2,10 +2,10 @@ const deletOne = async (id) => {
   let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     method: 'DELETE'
   });
-  getAll();
+  getAllRecipes();
 }
 
-const getAll = async () => {
+const getAllRecipes = async () => {
   //fetch
   let JSONData = await fetch("http://localhost:8080/api/recipes");
   let data = await JSONData.json();
@@ -41,6 +41,20 @@ const getAll = async () => {
   }
 }
 
+const getAllIngredientsByRecipe = async (id) => {
+  //fetch
+  let JSONData = await fetch(`http://localhost:8080/api/recipeIngredient/recipe/${id}`);
+  let data = await JSONData.json();
+
+  //display
+  const ingredientsAll = document.getElementById("add-ingredient-all");
+  const newElementString = `
+  <div data-id="${data.id}" class="ingredient-tile">
+    <>
+  <div>
+  `
+}
+
 const handleSubmit = async () => {
   const nameInput = document.getElementById("rfname");
   const costInput = document.getElementById("rfcost");
@@ -60,14 +74,15 @@ const handleSubmit = async () => {
   });
   let response = await JSONResponse.json();
 
-  getAll();
+  getAllRecipes();
   nameInput.value = "";
   costInput.value = "";
   salePriceInput.value = "";
 }
 
+// const handleAddIgredient
 
 // DOM-manipulation
 const submitButton = document.getElementById("recipe-form-submit");
 submitButton.addEventListener("click", handleSubmit);
-window.onload = getAll;
+window.onload = getAllRecipes;

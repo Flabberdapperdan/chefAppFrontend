@@ -37,6 +37,7 @@ input {
 
 #add-ingredient {
   display: flex;
+  flex-direction: column;
   margin-left: 5vw;
 }
 
@@ -64,6 +65,38 @@ input {
   max-height: 20px;
   text-align: center;
   font-size: 15px;
+}
+
+#add-ingredient-all {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.ingredient-tile {
+  display: flex;
+  flex-flow: row nowrap;
+  border-radius: 15px;
+  margin: 3px 5px;
+
+  background-color: rgb(25, 143, 216);
+  color: azure;
+}
+
+.ingredient-tile > p {
+  margin: 5px;
+}
+
+.ingredient-tile > p:nth-child(1) {
+  padding-left: 10px;
+}
+
+.ingredient-tile > p:nth-last-child(1) {
+  padding-right: 5px;
+}
+
+.ingredient-tile > p:nth-last-child(1):hover {
+  cursor: pointer;
+  color:rgb(103, 113, 119);
 }
 
 input[type=submit] {

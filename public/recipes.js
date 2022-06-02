@@ -1,4 +1,4 @@
-const deletOne = async (id) => {
+const deleteRecipe = async (id) => {
   let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     method: 'DELETE'
   });
@@ -36,26 +36,36 @@ const getAllRecipes = async () => {
   for (let j = 0; j < deleteButtons.length; j++) {
     const button = deleteButtons[j];
     button.addEventListener("click", () => {
-      deletOne(button.dataset.id);
+      deleteRecipe(button.dataset.id);
     })
   }
 }
 
-const getAllIngredientsByRecipe = async (id) => {
+const getAllIngredientsByRecipe = async () => {
+  const id = 88; //this will be variable again eventually
   //fetch
-  let JSONData = await fetch(`http://localhost:8080/api/recipeIngredient/recipe/${id}`);
+  let JSONData = await fetch(`http://localhost:8080/api/recipe-ingredient/recipe/${id}`);
   let data = await JSONData.json();
 
   //display
   const ingredientsAll = document.getElementById("add-ingredient-all");
-  const newElementString = `
-  <div data-id="${data.id}" class="ingredient-tile">
-    <>
-  <div>
-  `
+  ingredientsAll.innerHTML = '';
+  data.forEach(ingredient => {
+    const newElementString = `
+    <div data-id="${ingredient.recipeIngredientId}" class="ingredient-tile">
+      <p>${ingredient.name}</p>
+      <p>${ingredient.amount}</p>
+      <p>${ingredient.metric}</p>
+      <p class="remove-ingredient">X</p>
+    </div>
+    `
+    ingredientsAll.innerHTML += newElementString;
+  });
+
+  //add remove-button functionality
 }
 
-const handleSubmit = async () => {
+const handleRecipeSubmit = async () => {
   const nameInput = document.getElementById("rfname");
   const costInput = document.getElementById("rfcost");
   const salePriceInput = document.getElementById("rfsaleprice");
@@ -65,6 +75,7 @@ const handleSubmit = async () => {
     "salePrice": salePriceInput.value 
   }
 
+  // fetch
   let JSONResponse = await fetch("http://localhost:8080/api/recipes", {
     method: 'POST',
     headers: {
@@ -74,15 +85,19 @@ const handleSubmit = async () => {
   });
   let response = await JSONResponse.json();
 
+  //clear and display recipes
   getAllRecipes();
   nameInput.value = "";
   costInput.value = "";
   salePriceInput.value = "";
 }
 
-// const handleAddIgredient
+const handleAddIgredient = () => {
+
+}
 
 // DOM-manipulation
 const submitButton = document.getElementById("recipe-form-submit");
-submitButton.addEventListener("click", handleSubmit);
+submitButton.addEventListener("click", handleRecipeSubmit);
 window.onload = getAllRecipes;
+window.onload = getAllIngredientsByRecipe;

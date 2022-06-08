@@ -9,7 +9,6 @@ const getAllRecipes = async () => {
   //fetch
   let JSONData = await fetch("http://localhost:8080/api/recipes");
   let data = await JSONData.json();
-  
   //display
   const resultsTable = document.getElementById("ingredient-result-body");
   resultsTable.innerHTML = "";
@@ -23,8 +22,15 @@ const getAllRecipes = async () => {
       <th>${element.name}</th>
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
-      <button data-id="${element.id}" class="recipes-delete-button">Delete</button>
-      <button>Adjust</button>
+      <th>
+        <input data-id="${element.id}" class="recipes-button" type="button" value=->
+      </th>
+        <input class="recipes-button" type="button" value=+>
+      <th>
+      </th>
+      <th>
+        <input id="add-ingredient" class="recipes-button" type="button" value="Ingredienten Toevoegen">
+      </th>    
     </tr>
     `;
     newRow.innerHTML = newString;
@@ -32,13 +38,11 @@ const getAllRecipes = async () => {
   }
 
   //attach delete-event
-  let deleteButtons = document.getElementsByClassName("recipes-delete-button");
-  for (let j = 0; j < deleteButtons.length; j++) {
-    const button = deleteButtons[j];
+  deleteButtons.forEach(button => {
     button.addEventListener("click", () => {
       deleteRecipe(button.dataset.id);
-    })
-  }
+    });
+  })
 }
 
 const getAllIngredientsByRecipe = async () => {
@@ -65,7 +69,7 @@ const getAllIngredientsByRecipe = async () => {
   //add remove-button functionality
 }
 
-const handleRecipeSubmit = async () => {
+const addRecipe = async () => {
   const nameInput = document.getElementById("rfname");
   const costInput = document.getElementById("rfcost");
   const salePriceInput = document.getElementById("rfsaleprice");
@@ -92,12 +96,33 @@ const handleRecipeSubmit = async () => {
   salePriceInput.value = "";
 }
 
-const handleAddIgredient = () => {
+const addIngredientToRecipe = async () => {
+  let ingredient = document.getElementById('rfingredient').value;
+  let bodyObject = {
+    "recipeId": 88,
+    "ingredientId": 60,
+    "amount": 5,
+    "metric": "g"
+  }
+
+  //fetch
+  let JSONResponse = await fetch("http://localhost:8080/api/recipe-ingredient", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bodyObject)
+  });
+  let response = await JSONResponse.json();
 
 }
 
 // DOM-manipulation
 const submitButton = document.getElementById("recipe-form-submit");
-submitButton.addEventListener("click", handleRecipeSubmit);
-window.onload = getAllRecipes;
-window.onload = getAllIngredientsByRecipe;
+submitButton.addEventListener("click", addRecipe);
+
+const onLoadCalls = () => {
+  getAllRecipes();
+  getAllIngredientsByRecipe();
+}
+window.onload = onLoadCalls;

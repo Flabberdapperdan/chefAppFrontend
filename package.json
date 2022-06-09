@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "koa": "^2.13.0",
-    "koa-static": "^5.0.0",
-    "nodemon": "2.0.16"
-  }
-}

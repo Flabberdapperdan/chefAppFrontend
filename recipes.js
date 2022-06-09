@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// RECIPE SECTION \\
+>>>>>>> master
 const deleteRecipe = async (id) => {
   let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     method: 'DELETE'
@@ -19,6 +23,9 @@ const getAllRecipes = async () => {
   });
     let newString = `
     <tr>
+      <th>
+        <input id="add-ingredient" class="recipes-button" type="button" value=">">
+      </th>  
       <th>${element.name}</th>
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
@@ -27,10 +34,14 @@ const getAllRecipes = async () => {
       </th>
         <input class="recipes-button" type="button" value=+>
       <th>
+<<<<<<< HEAD:public/recipes.js
       </th>
       <th>
         <input id="add-ingredient" class="recipes-button" type="button" value="Ingredienten Toevoegen">
       </th>    
+=======
+      </th>  
+>>>>>>> development:recipes.js
     </tr>
     `;
     newRow.innerHTML = newString;
@@ -117,7 +128,7 @@ const addIngredientToRecipe = async () => {
 
 }
 
-// DOM-manipulation
+// DOM-MANIPULATION \\
 const submitButton = document.getElementById("recipe-form-submit");
 submitButton.addEventListener("click", addRecipe);
 
@@ -125,4 +136,8 @@ const onLoadCalls = () => {
   getAllRecipes();
   getAllIngredientsByRecipe();
 }
+<<<<<<< HEAD:public/recipes.js
 window.onload = onLoadCalls;
+=======
+window.onload = onLoadCalls;
+>>>>>>> development:recipes.js

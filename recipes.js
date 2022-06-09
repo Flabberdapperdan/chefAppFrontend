@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 // RECIPE SECTION \\
+>>>>>>> master
 const deleteRecipe = async (id) => {
   let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
     method: 'DELETE'

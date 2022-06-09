@@ -21,6 +21,28 @@
     <h1>Ingredients</h1>
     <div id="ingredient-list" style="overflow-x:auto;"></div>
     <script src="./ingredients.js" ></script>
+
+    <label>Choose a browser from this list:
+      <input list="browsers" name="myBrowser" /></label>
+      <datalist id="browsers">
+        <option value="Chrome">
+        <option value="Firefox">
+        <option value="Internet Explorer">
+        <option value="Opera">
+        <option value="Safari">
+        <option value="Microsoft Edge">
+      </datalist>
   </main>
+  <label for="lang">Language</label>
+  <select name="languages" id="lang">
+    <option value="javascript">JavaScript</option>
+    <option value="php">PHP</option>
+    <option value="java">Java</option>
+    <option value="golang">Golang</option>
+    <option value="python">Python</option>
+    <option value="c#">C#</option>
+    <option value="C++">C++</option>
+    <option value="erlang">Erlang</option>
+  </select>
 </body>
 </html>

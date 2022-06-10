@@ -1,9 +1,9 @@
-<<<<<<< HEAD
-=======
+import { keys } from './keys.js';
+const { url } = keys;
+
 // RECIPE SECTION \\
->>>>>>> master
 const deleteRecipe = async (id) => {
-  let JSONResponse = await fetch(`http://localhost:8080/api/recipes/${id}`, {
+  let JSONResponse = await fetch(`h${url}api/recipes/${id}`, {
     method: 'DELETE'
   });
   getAllRecipes();
@@ -11,7 +11,10 @@ const deleteRecipe = async (id) => {
 
 const getAllRecipes = async () => {
   //fetch
-  let JSONData = await fetch("http://localhost:8080/api/recipes");
+  let JSONData = await fetch(`${url}api/recipes`, {
+    method: 'GET',
+    mode: 'cors'
+  });
   let data = await JSONData.json();
   //display
   const resultsTable = document.getElementById("ingredient-result-body");
@@ -52,7 +55,7 @@ const getAllRecipes = async () => {
 const getAllIngredientsByRecipe = async () => {
   const id = 88; //this will be variable again eventually
   //fetch
-  let JSONData = await fetch(`http://localhost:8080/api/recipe-ingredient/recipe/${id}`);
+  let JSONData = await fetch(`${url}api/recipe-ingredient/recipe/${id}`);
   let data = await JSONData.json();
 
   //display
@@ -84,7 +87,7 @@ const addRecipe = async () => {
   }
 
   // fetch
-  let JSONResponse = await fetch("http://localhost:8080/api/recipes", {
+  let JSONResponse = await fetch(`${url}api/recipes`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -126,7 +129,8 @@ const submitButton = document.getElementById("recipe-form-submit");
 submitButton.addEventListener("click", addRecipe);
 
 const onLoadCalls = () => {
+  console.log(1)
   getAllRecipes();
-  getAllIngredientsByRecipe();
+  // getAllIngredientsByRecipe();
 }
 window.onload = onLoadCalls;

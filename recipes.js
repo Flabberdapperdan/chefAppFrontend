@@ -20,14 +20,11 @@ const getAllRecipes = async () => {
   });
     let newString = `
     <tr>
-      <th>
-        <input id="add-ingredient" class="recipes-button" type="button" value=">">
-      </th>  
       <th>${element.name}</th>
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
       <th>
-        <input data-id="${element.id}" class="recipes-button" type="button" value=->
+        <input data-id="${element.id}" class="recipes-button recipe-delete-button" type="button" value=->
       </th>
         <input class="recipes-button" type="button" value=+>
       <th>
@@ -39,13 +36,16 @@ const getAllRecipes = async () => {
   }
 
   //attach delete-event
-  deleteButtons.forEach(button => {
+  let deleteButtons = document.getElementsByClassName("recipe-delete-button");
+  let deleteButtonsArr = Array.from(deleteButtons);
+  deleteButtonsArr.forEach(button => {
     button.addEventListener("click", () => {
       deleteRecipe(button.dataset.id);
     });
   })
 }
 
+/* 
 const getAllIngredientsByRecipe = async () => {
   const id = 88; //this will be variable again eventually
   //fetch
@@ -69,6 +69,7 @@ const getAllIngredientsByRecipe = async () => {
 
   //add remove-button functionality
 }
+*/
 
 const addRecipe = async () => {
   const nameInput = document.getElementById("rfname");
@@ -119,11 +120,7 @@ const addIngredientToRecipe = async () => {
 }
 
 // DOM-MANIPULATION \\
-const submitButton = document.getElementById("recipe-form-submit");
-submitButton.addEventListener("click", addRecipe);
-
 const onLoadCalls = () => {
   getAllRecipes();
-  getAllIngredientsByRecipe();
 }
 window.onload = onLoadCalls;

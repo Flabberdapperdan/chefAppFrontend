@@ -5,6 +5,10 @@ main {
   margin-top: 40px;
 }
 
+#recipe-create-link {
+  background-color: aquamarine;
+}
+
 /* //DISPLAY SECTION \\ */
 #ingredient-result {
   width: 80vw;

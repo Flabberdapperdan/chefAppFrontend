@@ -1,7 +1,8 @@
 .navbar {
-  background-color: rgba(223, 236, 34, 0.863);
-  position: fixed;
-  top: 0;
+  position: relative;
+  min-height: 50px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
   width: 100%;
 }
 

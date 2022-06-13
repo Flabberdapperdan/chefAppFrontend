@@ -1,6 +1,5 @@
 import {keys} from "./keys.js";
 
-let editMode = false;
 /*
 Get (read) all ingredients
 */
@@ -16,139 +15,44 @@ const readObjects = async () => {
     newList.push(jsonArray[i]);
   }
 
-  let template = {'<>':'tr', 'data-id':'${id}' ,'html':[
-    {'<>': 'td', 'text':'${id}'},
-    {'<>': 'td', 'text':'${code}'},
-    {'<>': 'td', 'text':'${group}'},
-    {'<>': 'td', 'text':'${name}'},
-    {'<>': 'td', 'text':'${marketPrice}'},
+  let headerTemplate = {'<>':'thead', 'html':[
+    {'<>':'tr', 'html':[
+      {'<>':'th', 'text':'Id'},
+      {'<>':'th', 'text':'Code'},
+      {'<>':'th', 'text':'Group'},
+      {'<>':'th', 'text':'Name'},
+      {'<>':'th', 'text':'Market Price'},
+    ]}
+  ]};
+
+  let bodyTemplate = {'<>': 'tr', 'data-id':'${id}' ,'html':[
+    {'<>':'td', 'text':'${id}'},
+    {'<>':'td', 'text':'${code}'},
+    {'<>':'td', 'text':'${group}'},
+    {'<>':'td', 'text':'${name}'},
+    {'<>':'td', 'text':'${marketPrice}'},
     /*{'<>': 'td', 'html':[
       {'<>': 'span', 'text': '${id}: ${code} x ${quantity}', '{}':function(){return(this.nutrients)}}
     ]},*/
-    {'<>': 'td', 'html':[
-      {'<>': 'button', 'html':'Edit','onclick':function(){
-        console.log($(this));
+    {'<>':'td', 'html':[
+      {'<>':'button', 'html':'Edit', 'class':'object-edit','onclick':function(obj,index){
+        editObject(obj);
       }},
     ]},
   ]};
+
+  let footerTemplate = {'<>': 'tfoot', 'html':[
+    {'<>': 'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'id'}]},
+    {'<>': 'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
+    {'<>': 'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
+    {'<>': 'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'name'}]},
+    {'<>': 'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketPrice'}]},
+    {'<>': 'td', 'html':[{'<>':'button', 'id':'object-create', 'data-name':'marketPrice'}]},
+  ]}
   
-  $("#ingredient-table").json2html(newList,template);
-  console.log($("#ingredient-table"));
-  $("#ingredient-table").appendChild(document.createElement("tr"));
-}
-
-function jsonArrayToHtml(jsonArray, template, header = false)
-{
-  let baseElement = document.createElement(template.tag);
-  console.log(jsonArray);
-  for (let i in jsonArray)
-  {
-    // this is definitely not ideal, figure out a better way later
-    if (i == 0 && header)
-    {
-      let parentElement = document.createElement(template.ref.tag);
-      for (let j in template.ref.children)
-      {
-        let childElement = document.createElement(template.ref.children[j].tag);
-        childElement.innerText = template.ref.children[j].key;
-        parentElement.appendChild(childElement);
-      }
-      baseElement.appendChild(parentElement);
-    }
-    baseElement.appendChild(jsonObjectToHtml(jsonArray[i], template.ref));
-  }
-  if(template.ref.create)
-  {
-    let parentElement = document.createElement(template.ref.tag);
-    parentElement.id = "new-object";
-    for (let i in template.ref.children)
-    {
-      let child = template.ref.children[i];
-      let childElement = document.createElement(child.tag);
-      if(child.key == "id")
-      {
-        // do nothing
-      }
-      else
-      {
-        let inputElement = document.createElement('input');
-        inputElement.type = child.type;
-        inputElement.id = child.key;
-        childElement.appendChild(inputElement);
-      }
-      parentElement.appendChild(childElement);
-    }
-    let cellElement = document.createElement(template.ref.children[0].tag);
-    let inputElement = document.createElement('input');
-    inputElement.type = "submit";
-    inputElement.id = "object-create";
-    inputElement.value = "Submit";
-    inputElement.addEventListener("click", () => createObject(template.ref));
-    cellElement.appendChild(inputElement);
-    parentElement.appendChild(cellElement);
-    baseElement.appendChild(parentElement);
-  }
-  console.log(baseElement);
-  return baseElement;
-}
-
-function jsonObjectToHtml(jsonObject, objectTemplate)
-{
-  if(objectTemplate.concat)
-  {
-    let text = objectTemplate.concat;
-    for (let i in objectTemplate.children)
-    {
-      let child = objectTemplate.children[i];
-      let literal = `${child.key}`;
-      text = text.replace("${" + literal + "}", jsonObject[child.key]);
-    }
-    let textElement = document.createElement('text');
-    textElement.innerText = text;
-    return textElement;
-  }
-  let parentElement = document.createElement(objectTemplate.tag);
-  parentElement.setAttribute('data-id', jsonObject["id"]);
-  for (let i in objectTemplate.children)
-  {
-    let child = objectTemplate.children[i];
-    if(child.type == "ref")
-    {
-      let childElement = document.createElement(child.ref.tag);
-      childElement.appendChild(jsonArrayToHtml(jsonObject[child.key], child.ref));
-      parentElement.appendChild(childElement);
-    }
-    else
-    {
-      let childElement = document.createElement(child.tag);
-      childElement.innerText = jsonObject[child.key];
-      parentElement.appendChild(childElement);
-    }
-  }
-  console.log(parentElement);
-  if(objectTemplate.edit)
-  {
-    let cellElement = document.createElement(objectTemplate.children[0].tag);
-    if(!editMode)
-    {
-      let inputElement = document.createElement('input');
-      inputElement.type = "submit";
-      inputElement.classList.add("object-edit");
-      inputElement.value = "Edit";
-      inputElement.addEventListener("click", () => editObject(jsonObject["id"], objectTemplate));
-      cellElement.appendChild(inputElement);
-    }
-    parentElement.appendChild(cellElement);
-  }
-  return parentElement;
-}
-
-function multiselect()
-{
-  let newEntry = document.createElement('div');
-  newEntry.innerText = this.value;
-  newEntry.setAttribute("data-id", this.getAttribute("data-id"));
-  this.appendChild(newEntry);
+  $("#ingredient-table").json2html(newList[0], headerTemplate);
+  $("#ingredient-table").json2html(newList, bodyTemplate);
+  $("#ingredient-table").json2html(newList[0], footerTemplate);
 }
 
 /*
@@ -207,9 +111,11 @@ const createObject = async (objectTemplate) => {
 Put (update) an ingredient
 */
 
-function editObject(objectId, objectTemplate)
+function editObject(obj)
 {
-  let createElement = document.getElementById("new-object");
+  console.log(obj.obj.id);
+  return;
+  let createElement = document.getElementById("object-create");
   createElement.remove();
   const editElements = document.getElementsByClassName("object-edit");
   for(const element of editElements)

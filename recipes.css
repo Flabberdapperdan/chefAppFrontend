@@ -6,7 +6,22 @@ main {
 }
 
 #recipe-create-link {
-  background-color: aquamarine;
+  height: 10%;
+  width: 20%;
+
+  background-color: rgb(22, 151, 43);
+  border: 1px black solid;
+  border-radius: 5px;
+}
+
+#recipe-create-link {
+  text-decoration: none;
+}
+
+#recipe-create-link:hover {
+  background-color:rgb(19, 143, 40); 
+  text-decoration: none; 
+  cursor: pointer;  
 }
 
 /* //DISPLAY SECTION \\ */

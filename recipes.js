@@ -3,9 +3,10 @@ const { url } = keys;
 
 // RECIPE SECTION \\
 const deleteRecipe = async (id) => {
-  let JSONResponse = await fetch(`h${url}api/recipes/${id}`, {
+  let JSONResponse = await fetch(`${url}api/recipes/${id}`, {
     method: 'DELETE'
   });
+  let data = JSONResponse.json();
   getAllRecipes();
 }
 
@@ -26,14 +27,22 @@ const getAllRecipes = async () => {
   });
     let newString = `
     <tr>
+      <th>
+        <button data-id="${element.id}" class="recipes-button recipe-delete-button">
+          <span class="material-symbols-outlined">
+            delete_forever
+          </span>
+        </button>
+      </th>
       <th>${element.name}</th>
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
       <th>
-        <input data-id="${element.id}" class="recipes-button recipe-delete-button" type="button" value=->
-      </th>
-        <input class="recipes-button" type="button" value=+>
-      <th>
+        <button data-id="${element.id} class="recipes-button add-recipe-button">
+          <span class="material-symbols-outlined">
+            library_add
+          </span>
+        </button>
       </th>  
     </tr>
     `;
@@ -49,7 +58,19 @@ const getAllRecipes = async () => {
       deleteRecipe(button.dataset.id);
     });
   })
+
+  //attach add-ingredient-event
+  let addButtons = document.getElementsByClassName("add-recipe-button");
+  let addButtonsArr = Array.from(addButtons);
+  addButtonsArr.forEach(button => {
+    button.addEventListener("click", () => {
+      localStorage.setItem("recipeId", button.dataset.id);
+      window.location.href = 'recipesAddIngredients.html';
+    })
+  })
 }
+
+
 
 /* 
 const getAllIngredientsByRecipe = async () => {
@@ -76,33 +97,6 @@ const getAllIngredientsByRecipe = async () => {
   //add remove-button functionality
 }
 */
-
-const addRecipe = async () => {
-  const nameInput = document.getElementById("rfname");
-  const costInput = document.getElementById("rfcost");
-  const salePriceInput = document.getElementById("rfsaleprice");
-  let bodyObject = {
-    "name": nameInput.value,
-    "cost": costInput.value,
-    "salePrice": salePriceInput.value 
-  }
-
-  // fetch
-  let JSONResponse = await fetch(`${url}api/recipes`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(bodyObject)
-  });
-  let response = await JSONResponse.json();
-
-  //clear and display recipes
-  getAllRecipes();
-  nameInput.value = "";
-  costInput.value = "";
-  salePriceInput.value = "";
-}
 
 const addIngredientToRecipe = async () => {
   let ingredient = document.getElementById('rfingredient').value;

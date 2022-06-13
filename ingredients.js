@@ -1,66 +1,40 @@
-/*
-Template initialization for construction
-*/
-const nutrientTemplate = {
-  children: [
-    {key: 'id', type: 'number'},
-    {key: 'name', type: 'text'},
-  ],
-  concat: "${id}: ${name}; ",
-  create: false,
-  edit: false
-}
-const nutrientArrayTemplate = {
-  ref: nutrientTemplate,
-  tag: 'td'
-}
-
-const ingredientTemplate = {
-  children: [
-    {key: 'id', type: 'number', tag: 'td'},
-    {key: 'code', type: 'text', tag: 'td'},
-    {key: 'group', type: 'text', tag: 'td'},
-    {key: 'name', type: 'text', tag: 'td'},
-    {key: 'marketPrice', type: 'number', tag: 'td'},
-    {key: 'nutrients', type: 'ref', ref: nutrientArrayTemplate},
-  ],
-  tag: 'tr',
-  create: true,
-  edit: true
-}
-const ingredientArrayTemplate = {
-  ref: ingredientTemplate,
-  tag: 'table'
-}
+import {keys} from "./keys.js";
 
 let editMode = false;
 /*
 Get (read) all ingredients
 */
 const readObjects = async () => {
-  let response = await fetch("http://localhost:8080/api/ingredients?nutrients=true");
+  let response = await fetch(keys.url + "api/ingredients?nutrients=true");
   console.log(response);
   let jsonArray = await response.json();
   console.log(jsonArray);
-  document.getElementById("ingredient-list").appendChild(jsonArrayToHtml(jsonArray, ingredientArrayTemplate, true));
-/*   response = await fetch("http://localhost:8080/api/nutrients");
-  jsonArray = await response.json();
-  console.log(jsonArray);
-  let dataList = document.createElement('datalist');
-  dataList.id = 'nutrients';
-  for (let i in jsonArray)
+
+  let newList = [];
+  for(let i = 0; i < 50; i++)
   {
-    let jsonObject = jsonArray[i];
-    let option = document.createElement('option');
-    option.value = jsonObject.name;
-    option.setAttribute("data-id", jsonObject.id);
-    dataList.appendChild(option);
+    newList.push(jsonArray[i]);
   }
-  document.getElementById("ingredient-list").appendChild(dataList);
-  console.log(template);
-  template.id.name = "bla";
-  alert(template[0]);
-  alert(template[id]); */
+
+  let template = {'<>':'tr', 'data-id':'${id}' ,'html':[
+    {'<>': 'td', 'text':'${id}'},
+    {'<>': 'td', 'text':'${code}'},
+    {'<>': 'td', 'text':'${group}'},
+    {'<>': 'td', 'text':'${name}'},
+    {'<>': 'td', 'text':'${marketPrice}'},
+    /*{'<>': 'td', 'html':[
+      {'<>': 'span', 'text': '${id}: ${code} x ${quantity}', '{}':function(){return(this.nutrients)}}
+    ]},*/
+    {'<>': 'td', 'html':[
+      {'<>': 'button', 'html':'Edit','onclick':function(){
+        console.log($(this));
+      }},
+    ]},
+  ]};
+  
+  $("#ingredient-table").json2html(newList,template);
+  console.log($("#ingredient-table"));
+  $("#ingredient-table").appendChild(document.createElement("tr"));
 }
 
 function jsonArrayToHtml(jsonArray, template, header = false)
@@ -202,7 +176,7 @@ const createObject = async (objectTemplate) => {
     }
     body[child.key] = document.getElementById(child.key).value;
   }
-  let response = await fetch("http://localhost:8080/api/ingredients", {
+  let response = await fetch(keys.url + "api/ingredients", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -217,7 +191,7 @@ const createObject = async (objectTemplate) => {
   {
     linkBody["nutrientId"] = nutrientIds[i];
     console.log(linkBody);
-    let linkResponse = await fetch(`http://localhost:8080/api/ingredients/${newId}/nutrients`, {
+    let linkResponse = await fetch(keys.url + `api/ingredients/${newId}/nutrients`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -295,7 +269,7 @@ const updateObject = async (objectId, objectTemplate) => {
     }
     body[child.key] = document.getElementById(child.key).value;
   }
-  let response = await fetch("http://localhost:8080/api/ingredients/" + objectId, {
+  let response = await fetch(keys.url + "api/ingredients/" + objectId, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -310,7 +284,7 @@ Delete an ingredient
 */
 
 const deleteObject = async (objectId) => {
-  let response = await fetch(`http://localhost:8080/api/ingredients/${objectId}`, {
+  let response = await fetch(keys.url + `api/ingredients/${objectId}`, {
     method: 'DELETE'
   });
   location.reload();

@@ -38,7 +38,7 @@ const getAllRecipes = async () => {
       <th>${element.cost}</th>
       <th>${element.salePrice}</th>
       <th>
-        <button data-id="${element.id} class="recipes-button add-recipe-button">
+        <button data-id="${element.id}" class="recipes-button recipe-add-button">
           <span class="material-symbols-outlined">
             library_add
           </span>
@@ -60,7 +60,7 @@ const getAllRecipes = async () => {
   })
 
   //attach add-ingredient-event
-  let addButtons = document.getElementsByClassName("add-recipe-button");
+  let addButtons = document.getElementsByClassName("recipe-add-button");
   let addButtonsArr = Array.from(addButtons);
   addButtonsArr.forEach(button => {
     button.addEventListener("click", () => {

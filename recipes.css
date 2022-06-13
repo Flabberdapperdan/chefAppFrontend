@@ -58,27 +58,27 @@ hr {
   font-family: 'Raleway', cursive;
   color: #575757;
   border-bottom: solid saddlebrown;
-}
+} 
 
 .recipes-button {
+  height: 30px;
   width: 30px;
   padding: 0;
   margin: 5px 5px;
-}
-
-.recipe-delete-button {
-  height: 30px;
-  width: 30px;
   border: none;
   background-color: whitesmoke;
-  border-radius: 4  px;
+  border-radius: 4px;
 }
 
 .recipe-delete-button:hover {
   cursor: pointer; 
-  background-color:#fa7676; 
+  background-color:#f57979; 
 }
 
+.recipe-add-button:hover {
+  cursor: pointer; 
+  background-color:#c4ffbc;
+}
 
 #add-ingredient {
   width: auto;

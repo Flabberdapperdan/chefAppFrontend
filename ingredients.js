@@ -1,19 +1,27 @@
 import {keys} from "./keys.js";
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+
 /*
 Get (read) all ingredients
 */
 const readObjects = async () => {
-  let response = await fetch(keys.url + "api/ingredients?nutrients=true");
-  console.log(response);
-  let jsonArray = await response.json();
-  console.log(jsonArray);
+  let apiUrl = keys.url + "api/ingredients"
 
-  let newList = [];
-  for(let i = 0; i < 50; i++)
+  const apiParams = [];
+  for (const key of urlParams.keys())
   {
-    newList.push(jsonArray[i]);
+    apiParams.push(key + '=' + urlParams.get(key));
   }
+
+  apiUrl += '?' + apiParams.join('&');
+
+  let response = await fetch(apiUrl);
+  console.log(response);
+  let jsonObject = await response.json();
+  let jsonArray = jsonObject["ingredients"];
+  console.log(jsonArray);
 
   let headerTemplate = {'<>':'thead', 'html':[
     {'<>':'tr', 'html':[
@@ -50,9 +58,9 @@ const readObjects = async () => {
     {'<>': 'td', 'html':[{'<>':'button', 'id':'object-create', 'data-name':'marketPrice'}]},
   ]}
   
-  $("#ingredient-table").json2html(newList[0], headerTemplate);
-  $("#ingredient-table").json2html(newList, bodyTemplate);
-  $("#ingredient-table").json2html(newList[0], footerTemplate);
+  $("#ingredient-table").json2html(jsonArray[0], headerTemplate);
+  $("#ingredient-table").json2html(jsonArray, bodyTemplate);
+  $("#ingredient-table").json2html(jsonArray[0], footerTemplate);
 }
 
 /*

@@ -22,5 +22,4 @@ const addRecipe = async () => {
   window.location.href = 'recipes.html'; //redirect to recipes
 }
 
-const submitButton = document.getElementById("recipe-form-submit");
-submitButton.addEventListener("click", addRecipe);
+document.getElementById("recipe-form-submit").addEventListener("click", addRecipe);

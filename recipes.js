@@ -70,27 +70,6 @@ const getAllRecipes = async () => {
   })
 }
 
-const addIngredientToRecipe = async () => {
-  let ingredient = document.getElementById('rfingredient').value;
-  let bodyObject = {
-    "recipeId": 88,
-    "ingredientId": 60,
-    "amount": 5,
-    "metric": "g"
-  }
-
-  //fetch
-  let JSONResponse = await fetch("http://localhost:8080/api/recipe-ingredient", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(bodyObject)
-  });
-  let response = await JSONResponse.json();
-
-}
-
 // DOM-MANIPULATION \\
 const onLoadCalls = () => {
   getAllRecipes();

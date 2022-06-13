@@ -70,34 +70,6 @@ const getAllRecipes = async () => {
   })
 }
 
-
-
-/* 
-const getAllIngredientsByRecipe = async () => {
-  const id = 88; //this will be variable again eventually
-  //fetch
-  let JSONData = await fetch(`${url}api/recipe-ingredient/recipe/${id}`);
-  let data = await JSONData.json();
-
-  //display
-  const ingredientsAll = document.getElementById("add-ingredient-all");
-  ingredientsAll.innerHTML = '';
-  data.forEach(ingredient => {
-    const newElementString = `
-    <div data-id="${ingredient.recipeIngredientId}" class="ingredient-tile">
-      <p>${ingredient.name}</p>
-      <p>${ingredient.amount}</p>
-      <p>${ingredient.metric}</p>
-      <p class="remove-ingredient">X</p>
-    </div>
-    `
-    ingredientsAll.innerHTML += newElementString;
-  });
-
-  //add remove-button functionality
-}
-*/
-
 const addIngredientToRecipe = async () => {
   let ingredient = document.getElementById('rfingredient').value;
   let bodyObject = {

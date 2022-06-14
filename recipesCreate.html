@@ -1,18 +1,35 @@
-<div id="recipe-form">
-  <label>Naam</label>
-  <input id="rfname" type="text"><br>
-  <label>Inkoopprijs</label>
-  <input id="rfcost" type="text"><br>
-  <label>Verkoopprijs</label>
-  <input id="rfsaleprice" type="text"><br>
-  <label>Ingredienten</label><br>
-  <div id="add-ingredient">
-    <div id="add-ingredient-new">
-      <input id="rfingredient" type="text">
-      <input id="add-ingredient-submit" type="button" value="+">
-    </div><br>
-    <div id="add-ingredient-all">
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <link rel="stylesheet" href="recipesCreate.css">
+  <script src="./recipesCreate.js" type="module"></script>
+</head>
+
+<body>
+
+  <header>
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("../navbar/nav.html");
+      });
+    </script>
+  </header>
+
+  <main>
+    <div id="recipe-form">
+      <label>Naam</label>
+      <input id="rfname" type="text"><br>
+      <label>Inkoopprijs</label>
+      <input id="rfcost" type="text"><br>
+      <label>Verkoopprijs</label>
+      <input id="rfsaleprice" type="text"><br>
+      <label>Ingredienten</label><br>
+      <input id="recipe-form-submit" type="submit" value="Recept Opslaan">
     </div>
-  </div>
-  <input id="recipe-form-submit" type="submit" value="Recept Opslaan">
-</div>
+  </main>
+
+
+</body>

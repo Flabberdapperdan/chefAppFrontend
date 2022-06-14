@@ -5,12 +5,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="./recipes.js" type="module"></script>
-  <link rel="stylesheet" href="recipes.css">
-  <title>Document</title>
+  <link rel="stylesheet" href="recipesAddIngredients.css">
+  <script src="./recipesAddIngredients.js" type="module"></script>
 </head>
 <body>
-
   <header>
     <div id="nav-placeholder"></div>
     <script>
@@ -21,29 +19,34 @@
   </header>
 
   <main>
+    <div id="current-recipe"></div>
     
-    <button id="recipe-create-link">
-      <a href="./recipesCreate.html">Nieuw Recept</a>
-    </button>
+    <hr>
+
+    <div id="add-ingredient">
+      <form>
+        <input id="ingredient-name" placeholder="ingredient toevoegen">
+        <input id="ingredient-amount" type="number" placeholder="hoeveelheid">
+        <button id="add-ingredient-button">
+          <span class="material-symbols-outlined">add_circle</span>
+        </button>
+      </form>
+    </div>
 
     <hr>
 
-    <div id="ingredient-result">
+    <div id="display-ingredients">
       <table id="ingredient-result-table">
         <thead>
           <tr>
             <th></th>
             <th>Naam</th>
-            <th>Inkoopprijs</th>
-            <th>Verkoopprijs</th>
+            <th>Hoeveelheid</th>
           </tr>
         </thead>
         <tbody id="ingredient-result-body"></tbody>
       </table>
     </div>
-
   </main>
-
-  
 </body>
 </html>

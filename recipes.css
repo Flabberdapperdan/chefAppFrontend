@@ -53,12 +53,6 @@ hr {
   min-width: 90%;
 }
 
-#ingredient-result-table > thead {
-  font-family: 'Raleway', cursive;
-  color: #575757;
-  border-bottom: solid saddlebrown;
-} 
-
 .recipes-button {
   height: 30px;
   width: 30px;

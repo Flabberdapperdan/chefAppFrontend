@@ -6,7 +6,7 @@ const deleteRecipe = async (id) => {
   let JSONResponse = await fetch(`${url}api/recipes/${id}`, {
     method: 'DELETE'
   });
-  let data = JSONResponse.json();
+  let data = await JSONResponse.json();
   getAllRecipes();
 }
 
@@ -74,4 +74,4 @@ const getAllRecipes = async () => {
 const onLoadCalls = () => {
   getAllRecipes();
 }
-window.onload = onLoadCalls;
+document.body.onload = onLoadCalls;

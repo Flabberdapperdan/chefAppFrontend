@@ -13,7 +13,7 @@ const recipeGetDisplay = async () => {
 
   //display
   let displayElement = document.getElementById("current-recipe");
-  let newElement = document.createElement("h4")
+  let newElement = document.createElement("h2")
   newElement.innerText = `${data.name}`;
   displayElement.appendChild(newElement);
 }
@@ -32,7 +32,7 @@ const ingredientsGetDisplay = async () => {
     const newElementString = `
     <tr data-id="${ingredient.recipeIngredientId}" class="ingredient-row">
       <th>
-        <button data-id="${ingredient.id}" class="ingredient-button ingredient-delete-button">
+        <button data-id="${ingredient.recipeIngredientId}" class="ingredient-button ingredient-delete-button">
           <span class="material-symbols-outlined">
             delete_forever
           </span>
@@ -52,20 +52,18 @@ const ingredientsGetDisplay = async () => {
     button.addEventListener("click", () => {
       deleteIngredient(button.dataset.id);
     });
-  })
-
+  });
 }
 
 const addIngredient = async () => {
-  console.log(1);
-
-  let name = document.getElementById("ingredient-name").value;
-  let amount = document.getElementById("ingredient-amount").value;
+  let name = document.getElementById("ingredient-name");
+  console.log(name);
+  let amount = document.getElementById("ingredient-amount");
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 60,
-    "name": name,
-    "amount": amount,
+    "ingredientId": 10,
+    "name": name.value,
+    "amount": amount.value,
     "metric": "g"
   }
 
@@ -78,12 +76,20 @@ const addIngredient = async () => {
     body: JSON.stringify(bodyObject)
   });
   let data = await JSONResponse.json();
-  console.log(data);
+
+  //clean-up and render
+  name.value = '';
+  amount.value = '';
   ingredientsGetDisplay();
 }
 
-const deleteIngredient = () => {
-
+const deleteIngredient = async (ingredientId) => {
+  //fetch
+  let JSONResponse = await fetch(`${url}api/recipe-ingredient/${ingredientId}`, {
+    method: 'DELETE'
+  });
+  let data = await JSONResponse.json();
+  ingredientsGetDisplay();
 }
 
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);

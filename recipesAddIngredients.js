@@ -55,16 +55,17 @@ const ingredientsGetDisplay = async () => {
   });
 }
 
+const ingredientsGetAll = async () => {
+  //fetch
+  let JSONData = await fetch(`${url}api/ingredients`);
+  let data = await JSONData.json();
+  console.log(data);
+}
+
 const addIngredient = async () => {
-  let name = document.getElementById("ingredient-name");
-  console.log(name);
-  let amount = document.getElementById("ingredient-amount");
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 10,
-    "name": name.value,
-    "amount": amount.value,
-    "metric": "g"
+    "ingredientId": 10
   }
 
   //fetch
@@ -77,9 +78,6 @@ const addIngredient = async () => {
   });
   let data = await JSONResponse.json();
 
-  //clean-up and render
-  name.value = '';
-  amount.value = '';
   ingredientsGetDisplay();
 }
 
@@ -97,6 +95,7 @@ document.getElementById("add-ingredient-button").addEventListener("click", addIn
 const onLoadCalls = () => {
   recipeGetDisplay();
   ingredientsGetDisplay();
+  ingredientsGetAll();
 }
 
 document.body.onload = onLoadCalls;

@@ -12,10 +12,7 @@ const deleteRecipe = async (id) => {
 
 const getAllRecipes = async () => {
   //fetch
-  let JSONData = await fetch(`${url}api/recipes`, {
-    method: 'GET',
-    mode: 'cors'
-  });
+  let JSONData = await fetch(`${url}api/recipes`);
   let data = await JSONData.json();
   //display
   const resultsTable = document.getElementById("ingredient-result-body");
@@ -43,6 +40,11 @@ const getAllRecipes = async () => {
             library_add
           </span>
         </button>
+        <button data-id="${element.id}" class="recipes-button recipe-edit-button">
+          <span class="material-symbols-outlined">
+            edit
+          </span>
+        </button>
       </th>  
     </tr>
     `;
@@ -68,10 +70,22 @@ const getAllRecipes = async () => {
       window.location.href = 'recipesAddIngredients.html';
     })
   })
+
+  //attach edit-event
+  let editButtons = document.getElementsByClassName("recipe-edit-button");
+  let editButtonsArr = Array.from(editButtons);
+  editButtonsArr.forEach(button => {
+    button.addEventListener("click", () => {
+      localStorage.setItem("recipeId", button.dataset.id);
+      localStorage.setItem("recipeEdit", true);
+      window.location.href = 'recipesCreate.html';
+    })
+  })
 }
 
 // DOM-MANIPULATION \\
 const onLoadCalls = () => {
+  localStorage.setItem("recipeEdit", false);
   getAllRecipes();
 }
 document.body.onload = onLoadCalls;

@@ -2,13 +2,10 @@ import { keys } from './keys.js';
 const { url } = keys;
 
 const addRecipe = async () => {
-  const nameInput = document.getElementById("rfname");
-  const costInput = document.getElementById("rfcost");
-  const salePriceInput = document.getElementById("rfsaleprice");
   let bodyObject = {
-    "name": nameInput.value,
-    "cost": costInput.value,
-    "salePrice": salePriceInput.value 
+    "name": document.getElementById("rfname").value,
+    "cost": document.getElementById("rfcost").value,
+    "salePrice": document.getElementById("rfsaleprice").value 
   }
 
   // fetch
@@ -19,7 +16,60 @@ const addRecipe = async () => {
     },
     body: JSON.stringify(bodyObject)
   });
-  window.location.href = 'recipes.html'; //redirect to recipes
+  //redirect to recipes
+  window.location.href = 'recipes.html';
 }
 
-document.getElementById("recipe-form-submit").addEventListener("click", addRecipe);
+const getRecipe = async () => {
+  let recipeId = localStorage.getItem("recipeId");
+  let JSONData = await fetch(`${url}api/recipes/${recipeId}`);
+  let data = await JSONData.json();
+  console.log(data);
+  return data;
+}
+
+
+const updateRecipe = async () => {
+  let bodyObject = {
+    "name": document.getElementById("rfname").value,
+    "cost": document.getElementById("rfcost").value,
+    "salePrice": document.getElementById("rfsaleprice").value 
+  }
+  let recipeId = localStorage.getItem("recipeId");
+
+  // fetch
+  let JSONResponse = await fetch(`${url}api/recipes/${recipeId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bodyObject)
+  });
+  let data = JSONResponse.json();
+  console.log(data);
+
+  //redirect to recipes
+  localStorage.setItem("recipeEdit", false);
+  window.location.href = 'recipes.html';
+}
+
+const adjustUIForPost = async () => {
+  console.log(1)
+  let recipe = await getRecipe();
+  document.getElementById("rfname").value = recipe.name;
+  document.getElementById("rfcost").value = recipe.cost;
+  document.getElementById("rfsaleprice").value = recipe.salePrice;
+  document.getElementById("recipe-form-submit").value = "Recept Aanpassen";
+  document.getElementById("recipe-form-submit").addEventListener("click", updateRecipe);
+}
+
+const onLoadCalls = () => {
+  let isEdit = localStorage.getItem("recipeEdit");
+  if (isEdit === 'true') {
+    adjustUIForPost();
+  } else {
+    document.getElementById("recipe-form-submit").addEventListener("click", addRecipe);
+  }
+}
+
+document.body.onload = onLoadCalls;

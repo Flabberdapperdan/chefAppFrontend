@@ -26,13 +26,13 @@ const ingredientsGetDisplay = async () => {
   console.log(data);
 
   //display
-  const ingredientsAll = document.getElementById("display-ingredients");
-  ingredientsAll.innerHTML = '';
+  const ingredientResults = document.getElementById("ingredient-result-body");
+  ingredientResults.innerHTML = '';
   data.forEach(ingredient => {
     const newElementString = `
-    <tr data-id="${ingredient.recipeIngredientId}" class="ingredient-tile">
+    <tr data-id="${ingredient.recipeIngredientId}" class="ingredient-row">
       <th>
-        <button data-id="${element.id}" class="ingredient-button ingredient-delete-button">
+        <button data-id="${ingredient.id}" class="ingredient-button ingredient-delete-button">
           <span class="material-symbols-outlined">
             delete_forever
           </span>
@@ -40,10 +40,9 @@ const ingredientsGetDisplay = async () => {
       </th>
       <th>${ingredient.name}</th>
       <th>${ingredient.amount}</th>
-      <p class="remove-ingredient">X</p>
     </tr>
     `
-    ingredientsAll.innerHTML += newElementString;
+    ingredientResults.innerHTML += newElementString;
   });
 
   //add remove-button functionality

@@ -59,3 +59,18 @@ input {
 #display-ingredients {
 
 }
+
+.ingredient-button {
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  margin: 5px 5px;
+  border: none;
+  background-color: whitesmoke;
+  border-radius: 4px;
+}
+
+.ingredient-delete-button:hover {
+  cursor: pointer; 
+  background-color:#f57979; 
+}

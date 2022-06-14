@@ -9,6 +9,7 @@ const recipeGetDisplay = async () => {
     mode: 'cors'
   });
   let data = await JSONData.json();
+  console.log(data);
 
   //display
   let displayElement = document.getElementById("current-recipe");
@@ -58,6 +59,7 @@ const ingredientsGetDisplay = async () => {
 
 const addIngredient = async () => {
   console.log(1);
+
   let name = document.getElementById("ingredient-name").value;
   let amount = document.getElementById("ingredient-amount").value;
   let bodyObject = {
@@ -89,7 +91,7 @@ document.getElementById("add-ingredient-button").addEventListener("click", addIn
 
 const onLoadCalls = () => {
   recipeGetDisplay();
-  ingredientsGetDisplay()
+  ingredientsGetDisplay();
 }
 
-window.onload = onLoadCalls;
+document.body.onload = onLoadCalls;

@@ -36,7 +36,7 @@ const template = {
         ]},
         {'<>':'tr', 'html':[
             {'<>':'td', html:[{'<>':'label', 'text':'Market Price'}]},
-            {'<>':'td', html:[{'<>':'span', 'text':'${marketPrice}'}]},
+            {'<>':'td', html:[{'<>':'span', 'text':'${marketprice}'}]},
         ]},
         {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Nutrients'}]}]},
         {'<>':'tr', 'html':[

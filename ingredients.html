@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="./json2html.js"></script>
-  <link rel="stylesheet" href="recipes.css">
+  <link rel="stylesheet" href="ingredients.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-  <script src="./ingredients.js" type="module"></script>
+  <script src="ingredients.js" type="module"></script>
   <title>Ingredients</title>
 </head>
 <body>
@@ -22,10 +22,12 @@
   </header>
   <main>
     <h1>Ingredients</h1>
-    <table id="table" style="overflow-x:auto;">
-      <thead id="table-header"></thead>
-      <tbody id="table-body"></tbody>
-      <tfoot id="table-footer"></tfoot>
+    <div id="result">
+      <table id="result-table">
+        <thead id="table-header"></thead>
+        <tbody id="table-body"></tbody>
+        <tfoot id="table-footer"></tfoot>
+      </table>
     </div>
 </body>
 </html>

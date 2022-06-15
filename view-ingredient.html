@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="../json2html.js"></script>
-  <link rel="stylesheet" href="../recipes.css">
-  <script src="../ingredients.js" type="module"></script>
+  <link rel="stylesheet" href="view-ingredient.css">
+  <script src="view-ingredient.js" type="module"></script>
   <title>View Ingredient</title>
 </head>
 <body>
@@ -20,7 +20,10 @@
     </script>
   </header>
   <main>
-    <h1>Ingredients</h1>
-    <table id="ingredient-table" style="overflow-x:auto;"></div>
+    <h1 id="result-header"></h1>
+    <div id="result">
+      <table id="result-table">
+      </table>
+    </div>
 </body>
 </html>

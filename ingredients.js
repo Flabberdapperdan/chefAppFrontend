@@ -58,9 +58,18 @@ const template = {
       {'<>':'td', 'text':'${id}'},
       {'<>':'td', 'text':'${code}'},
       {'<>':'td', 'text':'${group}'},
-      {'<>':'td', 'text':'${name}'},
+      {'<>':'td', html:[
+        {'<>':'span', 'class':'select-button', 'text':'${name}', 'onclick':function(evObject){
+          localStorage.setItem("ingredientId", evObject.obj.id);
+          window.location.href = 'view-ingredient.html';
+        }}
+      ]},
       {'<>':'td', 'text':'${marketPrice}'},
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'edit-button material-symbols-outlined', 'text':'change_circle', 'onclick':function(evObject){
+        localStorage.setItem("ingredientId", evObject.obj.id);
+        window.location.href = 'edit-ingredient.html';
+      }}]},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
         deleteObject(evObject.obj.id);
       }}]},
     ], '{}':function(){return(this.ingredients)}},
@@ -72,12 +81,12 @@ const template = {
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'name'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketPrice'}]},
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'add', 'onclick':function(){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
         createObject();
       }}]},
     ]},
     {'<>':'tr', 'html':[
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
         page = 0;
         readBody(true);
       }, 'style':function(){
@@ -86,7 +95,7 @@ const template = {
           return "visibility:hidden";
         }
       }}]},
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'chevron_left', 'onclick':function(){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_left', 'onclick':function(){
         page--;
         readBody(true);
       }, 'style':function(){
@@ -96,7 +105,7 @@ const template = {
         }
       }}]},
       {'<>':'td', 'text':'Page ${currentPage} of ${totalPages}'},
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'chevron_right', 'onclick':function(){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_right', 'onclick':function(){
         page++;
         readBody(true);
       }, 'style':function(dataObject){
@@ -105,7 +114,7 @@ const template = {
           return "visibility:hidden";
         }
       }}]},
-      {'<>':'td', 'html':[{'<>':'span', 'class':'material-symbols-outlined', 'text':'keyboard_double_arrow_right', 'onclick':function(evObject){
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_right', 'onclick':function(evObject){
         page = evObject.obj.totalPages - 1;
         readBody(true);
       }, 'style':function(dataObject){
@@ -202,7 +211,10 @@ const createObject = async () => {
   body['group'] = document.querySelector('[data-name="group"]').value;
   body['name'] = document.querySelector('[data-name="name"]').value;
   body['marketPrice'] = document.querySelector('[data-name="marketPrice"]').value;
-  let response = await fetch(keys.url + "api/ingredients", {
+  console.log(body);
+  console.log(baseApiUrl);
+  console.log(JSON.stringify(body));
+  let response = await fetch(baseApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -351,5 +363,3 @@ const deleteObject = async (objectId) => {
 }
 
 window.onload = init;
-
-// Via NPM of Nodeman hosten-inladen

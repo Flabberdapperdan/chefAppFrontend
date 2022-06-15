@@ -1,72 +1,204 @@
-const properties = ["id", "code", "group", "name", "marketPrice"];
-let editMode = false;
+import {keys} from "./keys.js";
+
+const queryString = window.location.search;
+const queryParams = new URLSearchParams(queryString);
+
+const baseApiUrl = keys.url + "api/ingredients";
+
+let jsonObject;
+let page = 0;
+let size = 10;
+let sortBy = "id";
+let orderBy = "asc";
+
+const template = {
+  "header":{'<>':'thead', 'id':'table-header', 'html':[
+    {'<>':'tr', 'html':[
+      {'<>':'th', 'text':'Id', 'onclick':function(){
+        applySortAndOrder("id");
+        page = 0;
+        readBody(true);
+      }},
+      {'<>':'th', 'text':'Code', 'onclick':function(){
+        applySortAndOrder("code");
+        page = 0;
+        readBody(true);
+      }},
+      {'<>':'th', 'text':'Group', 'onclick':function(){
+        applySortAndOrder("group");
+        page = 0;
+        readBody(true);
+      }},
+      {'<>':'th', 'text':'Name', 'onclick':function(){
+        applySortAndOrder("name");
+        page = 0;
+        readBody(true);
+      }},
+      {'<>':'th', 'text':'Market Price', 'onclick':function(){
+        applySortAndOrder("marketprice");
+        page = 0;
+        readBody(true);
+      }},
+      {'<>':'th', 'html':[{'<>':'select', 'html':[
+          {'<>':'option', 'value':'10', 'text':'10'},
+          {'<>':'option', 'value':'20', 'text':'20'},
+          {'<>':'option', 'value':'30', 'text':'30'},
+          {'<>':'option', 'value':'40', 'text':'40'},
+          {'<>':'option', 'value':'50', 'text':'50'},
+          {'<>':'option', 'value':'100', 'text':'100'},
+      ], 'onchange':function(){
+        page = 0;
+        size = this.val();
+        readBody(true);
+      }}]},
+    ]},
+  ]},
+  "body":{'<>':'tbody', 'id':'table-body', 'html':[
+    {'<>':'tr', 'data-id':'${id}', 'html':[
+      {'<>':'td', 'text':'${id}'},
+      {'<>':'td', 'text':'${code}'},
+      {'<>':'td', 'text':'${group}'},
+      {'<>':'td', html:[
+        {'<>':'span', 'class':'select-button', 'text':'${name}', 'onclick':function(evObject){
+          localStorage.setItem("ingredientId", evObject.obj.id);
+          window.location.href = 'view-ingredient.html';
+        }}
+      ]},
+      {'<>':'td', 'text':'${marketPrice}'},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'edit-button material-symbols-outlined', 'text':'change_circle', 'onclick':function(evObject){
+        localStorage.setItem("ingredientId", evObject.obj.id);
+        window.location.href = 'edit-ingredient.html';
+      }}]},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
+        deleteObject(evObject.obj.id);
+      }}]},
+    ], '{}':function(){return(this.ingredients)}},
+  ]},
+  "footer":{'<>':'tfoot', 'id':'table-footer', 'html':[
+    {'<>':'tr', 'html':[
+      {'<>':'td'},
+      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
+      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
+      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'name'}]},
+      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketPrice'}]},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
+        createObject();
+      }}]},
+    ]},
+    {'<>':'tr', 'html':[
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
+        page = 0;
+        readBody(true);
+      }, 'style':function(){
+        if(page == 0)
+        {
+          return "visibility:hidden";
+        }
+      }}]},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_left', 'onclick':function(){
+        page--;
+        readBody(true);
+      }, 'style':function(){
+        if(page == 0)
+        {
+          return "visibility:hidden";
+        }
+      }}]},
+      {'<>':'td', 'text':'Page ${currentPage} of ${totalPages}'},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_right', 'onclick':function(){
+        page++;
+        readBody(true);
+      }, 'style':function(dataObject){
+        if(page == dataObject.totalPages - 1)
+        {
+          return "visibility:hidden";
+        }
+      }}]},
+      {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_right', 'onclick':function(evObject){
+        page = evObject.obj.totalPages - 1;
+        readBody(true);
+      }, 'style':function(dataObject){
+        if(page == dataObject.totalPages - 1)
+        {
+          return "visibility:hidden";
+        }
+      }}]},
+    ]}
+  ]},
+};
+
+function init()
+{
+  if(queryParams.has('page'))
+  {
+    page = queryParams.get('page');
+  }
+  if(queryParams.has('size'))
+  {
+    size = queryParams.get('size');
+  }
+  readTable(true);
+}
+
 /*
 Get (read) all ingredients
 */
-const readObjects = async () => {
-  let response = await fetch("http://localhost:8080/api/ingredients");
-  console.log(response);
-  let jsonArray = await response.json();
-  console.log(jsonArray);
-  document.getElementById("ingredient-list").innerHTML = arrayToTable(jsonArray);
-  populateEventListeners();
+const fetchObject = async() => {
+  let apiUrl = baseApiUrl + `?page=${page}&size=${size}&sort_by=${sortBy}&order_by=${orderBy}`;
+  let response = await fetch(apiUrl);
+  return response.json();
 }
 
-function arrayToTable(jsonArray)
+function applySortAndOrder(value)
 {
-  let htmlText = "<table>";
-  htmlText += "<tr>";
-  for(let i in properties)
+  if(sortBy == value)
   {
-    htmlText += "<td>" + properties[i] + "</td>";
-  }
-  htmlText += "</tr>";
-  for(let i in jsonArray)
-  {
-    let jsonObject = jsonArray[i];
-    htmlText += "<tr id=" + jsonObject["id"] + " + >";
-    console.log(jsonObject);
-    for(let i in properties)
+    if(orderBy == "asc")
     {
-      console.log(properties[i]);
-      htmlText += "<td>" + jsonObject[properties[i]] + "</td>";
-    }
-    if(editMode)
-    {
-      htmlText += "<td></td>";
+      orderBy = "desc";
     }
     else
     {
-      htmlText += "<td><input type=\"submit\" class=\"object-edit\" value=\"Edit\"></td>";
+      orderBy = "asc";
     }
-    htmlText += "</tr>";
   }
-  htmlText += "<tr id=\"new-object\"><form>";
-  for(let i in properties)
+  else
   {
-    if(properties[i] == "id")
-    {
-      htmlText += "<td></td>";
-    }
-    else
-    {
-      htmlText += "<td><input type=\"text\" id=\"" + properties[i] + "\"></td>";
-    }
+    sortBy = value;
+    orderBy = "asc";
   }
-  htmlText += "<td><input type=\"submit\" id=\"object-create\" value=\"Create\"></td>";
-  htmlText += "</form></tr>";
-  htmlText += "</table>";
-  return htmlText;
 }
 
-function populateEventListeners()
-{
-  let createButton = document.getElementById("object-create");
-  createButton.addEventListener("click", createObject);
-  const editButtons = document.getElementsByClassName("object-edit");
-  Array.prototype.forEach.call(editButtons, function(editButton) {
-    editButton.addEventListener("click", editObject);
-  });
+const readTable = async (fetch = false) => {
+  if(fetch)
+  {
+    jsonObject = await fetchObject();
+  }
+  console.log(jsonObject);
+
+  readHeader();
+  readBody();
+}
+
+const readHeader = async (fetch = false) => {
+  if(fetch)
+  {
+    jsonObject = await fetchObject();
+  }
+  console.log(jsonObject);
+  
+  $("#table-header").json2html(jsonObject, template.header, {method:"replace"});
+}
+
+const readBody = async (fetch = false) => {
+  if(fetch)
+  {
+    jsonObject = await fetchObject();
+  }
+  console.log(jsonObject);
+
+  $("#table-body").json2html(jsonObject, template.body, {method:"replace"});
+  $("#table-footer").json2html(jsonObject, template.footer, {method:"replace"});
 }
 
 /*
@@ -74,88 +206,147 @@ Post (create) an ingredient
 */
 
 const createObject = async () => {
-  //alert(this.parentElement.parentElement.id);
-  let body = "{";
-  const propertyValues = [];
-  for(let i in properties)
-  {
-    if(properties[i] == "id")
-    {
-      continue;
-    }
-    let propertyValue = "\"" + properties[i] + "\":\"" + document.getElementById(properties[i]).value + "\"";
-    propertyValues.push(propertyValue);
-  }
-  body += propertyValues.toString();
-  body += "}";
-  let response = await fetch("http://localhost:8080/api/ingredients", {
+  let body = {};
+  body['code'] = document.querySelector('[data-name="code"]').value;
+  body['group'] = document.querySelector('[data-name="group"]').value;
+  body['name'] = document.querySelector('[data-name="name"]').value;
+  body['marketPrice'] = document.querySelector('[data-name="marketPrice"]').value;
+  console.log(body);
+  console.log(baseApiUrl);
+  console.log(JSON.stringify(body));
+  let response = await fetch(baseApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: body,
+      body: JSON.stringify(body),
   });
   let jsonObject = await response.json();
-  location.reload();
+  readBody(true);
 }
+
+/* const createObject = async (objectTemplate) => {
+  let body = {};
+  let nutrientIds = [];
+  for(let i in objectTemplate.children)
+  {
+    let child = objectTemplate.children[i];
+    if(child.key == "id")
+    {
+      continue;
+    }
+    if(child.type == "ref")
+    {
+      let arr = document.getElementById(child.key).value.split(';');
+      for(let j in arr)
+      {
+        nutrientIds.push(arr[j]);
+      }
+      continue;
+    }
+    body[child.key] = document.getElementById(child.key).value;
+  }
+  let response = await fetch(keys.url + "api/ingredients", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body),
+  });
+  let jsonObject = await response.json();
+  let newId = jsonObject["id"];
+  let linkBody = {};
+  console.log(nutrientIds);
+  for(let i in nutrientIds)
+  {
+    linkBody["nutrientId"] = nutrientIds[i];
+    console.log(linkBody);
+    let linkResponse = await fetch(keys.url + `api/ingredients/${newId}/nutrients`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(linkBody),
+    });
+    let jsonObject2 = await linkResponse.json();
+  }
+  //location.reload();
+} */
 
 /*
 Put (update) an ingredient
 */
 
-function editObject()
+function editObject(obj)
 {
-  //alert(this.parentElement.parentElement.id);
-  let rowElement = this.parentElement.parentElement;
-  //remove the other buttons for now
-  document.getElementById("new-object").remove();
-  const rowElements = rowElement.parentElement.children;
-  for(let i = 0; i < rowElements.length; i++)
+  console.log(obj.obj.id);
+  return;
+  let createElement = document.getElementById("object-create");
+  createElement.remove();
+  const editElements = document.getElementsByClassName("object-edit");
+  for(const element of editElements)
   {
-    rowElements[i].lastElementChild.innerHTML = "<td></td>";
+    element.parentElement.replaceWith(document.createElement('td'));
   }
+  let rowElement = document.querySelector("[data-id=\"" + objectId + "\"]");
   //construct update form
-  let htmlText = "<form>";
-  for(i in properties)
+  let newRowElement = document.createElement('tr');
+  for(let i in objectTemplate.children)
   {
-    if(properties[i] == "id")
+    let child = objectTemplate.children[i];
+    let cellElement = document.createElement('td');
+    if(child.key == "id")
     {
-      htmlText += "<td>" + rowElement.children[i].innerHTML + "</td>";
+      cellElement.innerText = rowElement.children[i].innerText;
     }
     else
     {
-      htmlText += "<td><input type=\"text\" id=\"" + properties[i] + "\" value=\"" + rowElement.children[i].innerHTML + "\"></td>";
+      let inputElement = document.createElement('input');
+      inputElement.type = child.type;
+      inputElement.id = child.key;
+      inputElement.value = rowElement.children[i].innerText;
+      cellElement.appendChild(inputElement);
     }
+    newRowElement.appendChild(cellElement);
   }
-  htmlText += "<td><input type=\"submit\" id=\"object-update\" value=\"Update\">";
-  htmlText += "</form><input type=\"button\" id=\"object-delete\" value=\"Delete\"></td>";
-  rowElement.innerHTML = htmlText;
-  let updateButton = document.getElementById("object-update");
-  updateButton.addEventListener("click", () => updateObject(updateButton.parentElement.parentElement.id));
-  let deleteButton = document.getElementById("object-delete");
-  deleteButton.addEventListener("click", () => deleteObject(deleteButton.parentElement.parentElement.id));
+  let cellElement = document.createElement('td');
+  let inputElement = document.createElement('input');
+  inputElement.type = "submit";
+  inputElement.id = "object-update";
+  inputElement.value = "Update";
+  inputElement.addEventListener("click", () => updateObject(objectId, objectTemplate));
+  cellElement.appendChild(inputElement);
+  inputElement = document.createElement('input');
+  inputElement.type = "submit";
+  inputElement.id = "object-delete";
+  inputElement.value = "Delete";
+  inputElement.addEventListener("click", () => deleteObject(objectId));
+  cellElement.appendChild(inputElement);
+  newRowElement.appendChild(cellElement);
+  rowElement.replaceWith(newRowElement);
 }
 
-const updateObject = async (objectId) => {
-  let body = "{";
-  const propertyValues = [];
-  for(let i in properties)
+const updateObject = async (objectId, objectTemplate) => {
+  let body = {};
+  for(let i in objectTemplate.children)
   {
-    if(properties[i] == "id")
+    let child = objectTemplate.children[i];
+    if(child.key == "id")
     {
       continue;
     }
-    let propertyValue = "\"" + properties[i] + "\":\"" + document.getElementById(properties[i]).value + "\"";
-    propertyValues.push(propertyValue);
+    if(child.type == "ref")
+    {
+      continue;
+    }
+    body[child.key] = document.getElementById(child.key).value;
   }
-  body += propertyValues.toString();
-  body += "}";
-  let response = await fetch("http://localhost:8080/api/ingredients/" + objectId, {
+  let response = await fetch(keys.url + "api/ingredients/" + objectId, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: body,
+    body: JSON.stringify(body),
   });
   let jsonObject = await response.json();
   location.reload();
@@ -165,12 +356,10 @@ Delete an ingredient
 */
 
 const deleteObject = async (objectId) => {
-  let response = await fetch(`http://localhost:8080/api/ingredients/${objectId}`, {
+  let response = await fetch(keys.url + `api/ingredients/${objectId}`, {
     method: 'DELETE'
   });
-  location.reload();
+  readBody(true);
 }
 
-window.onload = readObjects;
-
-// Via NPM of Nodeman hosten-inladen
+window.onload = init;

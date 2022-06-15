@@ -14,6 +14,14 @@ let orderBy = "asc";
 const template = {
   "header":{'<>':'thead', 'id':'table-header', 'html':[
     {'<>':'tr', 'html':[
+      {'<>':'td', 'html':[
+        {'<>':'button', 'text':'Create Ingredient', 'onclick':function(){
+          localStorage.removeItem("ingredientId");
+          window.location.href = 'edit-ingredient.html';
+        }}
+      ]}
+    ]},
+    {'<>':'tr', 'html':[
       {'<>':'th', 'text':'Id', 'onclick':function(){
         applySortAndOrder("id");
         page = 0;
@@ -64,7 +72,7 @@ const template = {
           window.location.href = 'view-ingredient.html';
         }}
       ]},
-      {'<>':'td', 'text':'${marketPrice}'},
+      {'<>':'td', 'text':'${marketprice}'},
       {'<>':'td', 'html':[{'<>':'span', 'class':'edit-button material-symbols-outlined', 'text':'change_circle', 'onclick':function(evObject){
         localStorage.setItem("ingredientId", evObject.obj.id);
         window.location.href = 'edit-ingredient.html';
@@ -80,7 +88,7 @@ const template = {
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'name'}]},
-      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketPrice'}]},
+      {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketprice'}]},
       {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
         createObject();
       }}]},
@@ -210,7 +218,7 @@ const createObject = async () => {
   body['code'] = document.querySelector('[data-name="code"]').value;
   body['group'] = document.querySelector('[data-name="group"]').value;
   body['name'] = document.querySelector('[data-name="name"]').value;
-  body['marketPrice'] = document.querySelector('[data-name="marketPrice"]').value;
+  body['marketprice'] = document.querySelector('[data-name="marketprice"]').value;
   console.log(body);
   console.log(baseApiUrl);
   console.log(JSON.stringify(body));
@@ -225,132 +233,6 @@ const createObject = async () => {
   readBody(true);
 }
 
-/* const createObject = async (objectTemplate) => {
-  let body = {};
-  let nutrientIds = [];
-  for(let i in objectTemplate.children)
-  {
-    let child = objectTemplate.children[i];
-    if(child.key == "id")
-    {
-      continue;
-    }
-    if(child.type == "ref")
-    {
-      let arr = document.getElementById(child.key).value.split(';');
-      for(let j in arr)
-      {
-        nutrientIds.push(arr[j]);
-      }
-      continue;
-    }
-    body[child.key] = document.getElementById(child.key).value;
-  }
-  let response = await fetch(keys.url + "api/ingredients", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body),
-  });
-  let jsonObject = await response.json();
-  let newId = jsonObject["id"];
-  let linkBody = {};
-  console.log(nutrientIds);
-  for(let i in nutrientIds)
-  {
-    linkBody["nutrientId"] = nutrientIds[i];
-    console.log(linkBody);
-    let linkResponse = await fetch(keys.url + `api/ingredients/${newId}/nutrients`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(linkBody),
-    });
-    let jsonObject2 = await linkResponse.json();
-  }
-  //location.reload();
-} */
-
-/*
-Put (update) an ingredient
-*/
-
-function editObject(obj)
-{
-  console.log(obj.obj.id);
-  return;
-  let createElement = document.getElementById("object-create");
-  createElement.remove();
-  const editElements = document.getElementsByClassName("object-edit");
-  for(const element of editElements)
-  {
-    element.parentElement.replaceWith(document.createElement('td'));
-  }
-  let rowElement = document.querySelector("[data-id=\"" + objectId + "\"]");
-  //construct update form
-  let newRowElement = document.createElement('tr');
-  for(let i in objectTemplate.children)
-  {
-    let child = objectTemplate.children[i];
-    let cellElement = document.createElement('td');
-    if(child.key == "id")
-    {
-      cellElement.innerText = rowElement.children[i].innerText;
-    }
-    else
-    {
-      let inputElement = document.createElement('input');
-      inputElement.type = child.type;
-      inputElement.id = child.key;
-      inputElement.value = rowElement.children[i].innerText;
-      cellElement.appendChild(inputElement);
-    }
-    newRowElement.appendChild(cellElement);
-  }
-  let cellElement = document.createElement('td');
-  let inputElement = document.createElement('input');
-  inputElement.type = "submit";
-  inputElement.id = "object-update";
-  inputElement.value = "Update";
-  inputElement.addEventListener("click", () => updateObject(objectId, objectTemplate));
-  cellElement.appendChild(inputElement);
-  inputElement = document.createElement('input');
-  inputElement.type = "submit";
-  inputElement.id = "object-delete";
-  inputElement.value = "Delete";
-  inputElement.addEventListener("click", () => deleteObject(objectId));
-  cellElement.appendChild(inputElement);
-  newRowElement.appendChild(cellElement);
-  rowElement.replaceWith(newRowElement);
-}
-
-const updateObject = async (objectId, objectTemplate) => {
-  let body = {};
-  for(let i in objectTemplate.children)
-  {
-    let child = objectTemplate.children[i];
-    if(child.key == "id")
-    {
-      continue;
-    }
-    if(child.type == "ref")
-    {
-      continue;
-    }
-    body[child.key] = document.getElementById(child.key).value;
-  }
-  let response = await fetch(keys.url + "api/ingredients/" + objectId, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body),
-  });
-  let jsonObject = await response.json();
-  location.reload();
-}
 /*
 Delete an ingredient
 */

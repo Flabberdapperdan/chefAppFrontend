@@ -57,7 +57,6 @@ const ingredientsGetDisplay = async () => {
       deleteIngredient(button.dataset.id);
     });
   });
-<<<<<<< HEAD
 
   //attach edit-button functionality
   let editButtons = document.getElementsByClassName("ingredient-edit-button");
@@ -67,8 +66,6 @@ const ingredientsGetDisplay = async () => {
       adjustUIForEdit(button.dataset.id);
     });
   });
-=======
->>>>>>> featureMatthijs
 }
 
 const ingredientsGetAll = async () => {
@@ -110,7 +107,6 @@ const deleteIngredient = async (ingredientId) => {
   ingredientsGetDisplay();
 }
 
-<<<<<<< HEAD
 const editIngredient = async () => {
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
@@ -143,20 +139,14 @@ const adjustUIForEdit = (id) => {
   amountElement.innerHTML = '';
   amountElement.appendChild(newElement);
   
-  //newElement.addEventListener("click", editIngredient);
-
-
   //change icon
   let button = document.getElementById(`ingredient-edit-button-${id}`);
-  let spanElement = button.childNodes[0];
-  console.log(button);
-  console.log(spanElement);
-  button.childNodes[0].innerHTML = 'check_circle';
+  let spanElement = button.children[0];
+  button.children[0].innerHTML = 'check_circle';
+  button.addEventListener("click", editIngredient);
 
 }
 
-=======
->>>>>>> featureMatthijs
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);
 
 const onLoadCalls = () => {

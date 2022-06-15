@@ -70,6 +70,11 @@ hr {
 
 .recipe-add-button:hover {
   cursor: pointer; 
+  background-color: rgb(255, 252, 180);
+}
+
+.recipe-edit-button:hover {
+  cursor: pointer; 
   background-color:#c4ffbc;
 }
 

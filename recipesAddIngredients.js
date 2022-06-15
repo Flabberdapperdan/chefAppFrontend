@@ -9,7 +9,6 @@ const recipeGetDisplay = async () => {
     mode: 'cors'
   });
   let data = await JSONData.json();
-  console.log(data);
 
   //display
   let displayElement = document.getElementById("current-recipe");
@@ -23,29 +22,34 @@ const ingredientsGetDisplay = async () => {
   //fetch
   let JSONData = await fetch(`${url}api/recipe-ingredient/recipe/${recipeId}`);
   let data = await JSONData.json();
-  console.log(data);
 
   //display
   const ingredientResults = document.getElementById("ingredient-result-body");
   ingredientResults.innerHTML = '';
-  data.forEach(ingredient => {
+  data.forEach(recipeIngredient => {
+    let id = recipeIngredient.recipeIngredientId;
     const newElementString = `
-    <tr data-id="${ingredient.recipeIngredientId}" class="ingredient-row">
+    <tr data-id="${id}" class="ingredient-row">
       <th>
-        <button data-id="${ingredient.recipeIngredientId}" class="ingredient-button ingredient-delete-button">
+        <button data-id="${id}" class="ingredient-button ingredient-delete-button">
           <span class="material-symbols-outlined">
             delete_forever
           </span>
         </button>
       </th>
-      <th>${ingredient.name}</th>
-      <th>${ingredient.amount}</th>
+      <th>${recipeIngredient.name}</th>
+      <th id=${`ingredient-amount-edit-${id}`}">${recipeIngredient.amount}</th>
+      <th>
+        <button data-id="${id}" class="ingredient-button ingredient-edit-button">
+          <span class="material-symbols-outlined">edit</span>
+        </button>
+      </th>
     </tr>
     `
     ingredientResults.innerHTML += newElementString;
   });
 
-  //add remove-button functionality
+  //attach remove-button functionality
   let deleteButtons = document.getElementsByClassName("ingredient-delete-button");
   let deleteButtonsArr = Array.from(deleteButtons);
   deleteButtonsArr.forEach(button => {
@@ -55,20 +59,22 @@ const ingredientsGetDisplay = async () => {
   });
 }
 
+const ingredientsGetAll = async () => {
+  //fetch
+  let JSONData = await fetch(`${url}api/ingredients`);
+  let data = await JSONData.json();
+  console.log(data);
+}
+
 const addIngredient = async () => {
-  let name = document.getElementById("ingredient-name");
-  console.log(name);
-  let amount = document.getElementById("ingredient-amount");
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 10,
-    "name": name.value,
-    "amount": amount.value,
-    "metric": "g"
+    "ingredientId": 5,
+    "amount": document.getElementById("ingredient-amount").value
   }
 
   //fetch
-  let JSONResponse = await fetch("http://localhost:8080/api/recipe-ingredient", {
+  let JSONResponse = await fetch(`${url}api/recipe-ingredient`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -77,9 +83,9 @@ const addIngredient = async () => {
   });
   let data = await JSONResponse.json();
 
-  //clean-up and render
-  name.value = '';
-  amount.value = '';
+  // clean-up
+  document.getElementById("ingredient-amount").value = "";
+  document.getElementById("ingredient-name").value = "";
   ingredientsGetDisplay();
 }
 
@@ -97,6 +103,7 @@ document.getElementById("add-ingredient-button").addEventListener("click", addIn
 const onLoadCalls = () => {
   recipeGetDisplay();
   ingredientsGetDisplay();
+  ingredientsGetAll();
 }
 
 document.body.onload = onLoadCalls;

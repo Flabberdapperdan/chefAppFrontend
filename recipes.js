@@ -33,7 +33,7 @@ const getAllRecipes = async () => {
       </th>
       <th>${element.name}</th>
       <th>${element.cost}</th>
-      <th>${element.salePrice}</th>
+      <th>${element.saleprice}</th>
       <th>
         <button data-id="${element.id}" class="recipes-button recipe-add-button">
           <span class="material-symbols-outlined">

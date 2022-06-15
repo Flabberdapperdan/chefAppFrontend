@@ -28,7 +28,6 @@ const getRecipe = async () => {
   return data;
 }
 
-
 const updateRecipe = async () => {
   let bodyObject = {
     "name": document.getElementById("rfname").value,
@@ -46,7 +45,6 @@ const updateRecipe = async () => {
     body: JSON.stringify(bodyObject)
   });
   let data = JSONResponse.json();
-  console.log(data);
 
   //redirect to recipes
   localStorage.setItem("recipeEdit", false);
@@ -54,7 +52,6 @@ const updateRecipe = async () => {
 }
 
 const adjustUIForPost = async () => {
-  console.log(1)
   let recipe = await getRecipe();
   document.getElementById("rfname").value = recipe.name;
   document.getElementById("rfcost").value = recipe.cost;
@@ -63,7 +60,7 @@ const adjustUIForPost = async () => {
   document.getElementById("recipe-form-submit").addEventListener("click", updateRecipe);
 }
 
-const onLoadCalls = () => {
+const onLoad = () => {
   let isEdit = localStorage.getItem("recipeEdit");
   if (isEdit === 'true') {
     adjustUIForPost();
@@ -72,4 +69,4 @@ const onLoadCalls = () => {
   }
 }
 
-document.body.onload = onLoadCalls;
+document.body.onload = onLoad;

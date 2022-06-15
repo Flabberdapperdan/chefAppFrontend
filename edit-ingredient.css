@@ -51,68 +51,13 @@ input {
   box-sizing: border-box;
 }
 
-#add-ingredient {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5vw;
+#add-nutrient-input {
+  width: 30%;
 }
 
-#add-ingredient-new {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-evenly;
-
-  min-width: 50vw;
-}
-
-#add-ingredient-new > input {
-  margin: 0 15px;
-  min-height: 15px;
-  max-height: 20px;
-  padding: 0;
-}
-
-#rfingredient {
-  flex-grow: 2;
-}
-
-#add-ingredient-submit {
-  max-width: 20px;
-  max-height: 20px;
-  text-align: center;
-  font-size: 15px;
-}
-
-#add-ingredient-all {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.ingredient-tile {
-  display: flex;
-  flex-flow: row nowrap;
-  border-radius: 15px;
-  margin: 3px 5px;
-
-  background-color: rgb(25, 143, 216);
-  color: azure;
-}
-
-.ingredient-tile > p {
-  margin: 5px;
-}
-
-.ingredient-tile > p:nth-child(1) {
-  padding-left: 10px;
-}
-
-.ingredient-tile > p:nth-last-child(1) {
-  padding-right: 5px;
-}
-
-.ingredient-tile > p:nth-last-child(1):hover {
-  cursor: pointer;
-  color:rgb(103, 113, 119);
+.add-nutrient-button:hover {
+  cursor: pointer; 
+  background-color:#c4ffbc;
 }
 
 input[type=submit] {

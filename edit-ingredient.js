@@ -6,6 +6,8 @@ const baseApiUrl = keys.url + 'api/ingredients';
 
 let jsonObject;
 
+let nutrientArray;
+
 let method = 'post';
 
 const template = {
@@ -39,19 +41,37 @@ const template = {
             }
         }},
         {'<>':'label', 'text':'Nutrients'},
+        {'<>':'br'},
         {'<>':'input', 'id':'add-nutrient-input', 'list':'nutrient-datalist', 'type':'text'},
         {'<>':'span', 'class':'add-nutrient-button material-symbols-outlined', 'text':'add', 'onclick':function(){
-            console.log($("#add-nutrient-input"));
-            console.log($("#add-nutrient-input")[0].value);
+            let nutrientId = $("#add-nutrient-input")[0].value.split("#")[0];
+            console.log(nutrientId);
+            let nutrientObject = nutrientArray.find(obj => obj.id == nutrientId);
+            $("#nutrients-table").json2html(nutrientObject, template.nutrient);
         }},
-        {'<>':'ul', 'html':[
-            {'<>':'li', 'text':'${name}', '{}':function(dataObject){
-                if(method == 'put' && jsonObject.hasOwnProperty('nutrients'))
-                {
-                    return dataObject.nutrients;
-                }
-            }}
-        ]},
+        {'<>':'table', 'id':'nutrients-table', 'html':function(dataObject)
+        {
+            if(method == 'put' && jsonObject.hasOwnProperty('nutrients'))
+            {
+                return $.json2html(dataObject.nutrients, template.nutrient);
+            }
+        }},
+        //     {'<>':'tr', 'html':[
+        //         {'<>':'td', 'text':'${id}'},
+        //         {'<>':'td', html:[{'<>':'input', 'type':'number', 'value':'${quantity}'}]},
+        //         {'<>':'td', 'text':'${unit}'},
+        //         {'<>':'td', 'text':'${code}'},
+        //         {'<>':'td', 'text':'${name}'},
+        //         {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
+        //             (this[0].parentElement.parentElement).remove();
+        //           }}]},
+        //     ],'{}':function(dataObject){
+        //         if(method == 'put' && jsonObject.hasOwnProperty('nutrients'))
+        //         {
+        //             return dataObject.nutrients;
+        //         }
+        //     }}
+        // ]},
         // {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Nutrients'}]}]},
         // {'<>':'tr', 'html':[
         //     {'<>':'td', 'text':'${quantity}${unit}'},
@@ -83,7 +103,17 @@ const template = {
             return(this);
         }, 'onchange':function(){
             console.log(this.value);
-    }}
+    }},
+    "nutrient":{'<>':'tr', 'class':'ingredient-nutrient', 'html':[
+        {'<>':'td', 'data-name':'id', 'text':'${id}'},
+        {'<>':'td', html:[{'<>':'input', 'type':'number', 'data-name':'quantity', 'value':'${quantity}'}]},
+        {'<>':'td', 'text':'${unit}'},
+        {'<>':'td', 'text':'${code}'},
+        {'<>':'td', 'text':'${name}'},
+        {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
+            (this[0].parentElement.parentElement).remove();
+          }}]},
+    ]}
 };
 
 function init()
@@ -122,13 +152,12 @@ const readObject = async (fetch = false) => {
         console.log(jsonObject);
         $("#result-form").json2html(jsonObject, template.form, {method:"replace"});
     }
-    let nutrientsObject;
     if(fetch)
     {
-        nutrientsObject = await fetchNutrients();
+        nutrientArray = await fetchNutrients();
     }
-    console.log(nutrientsObject);
-    $("#nutrient-datalist").json2html(nutrientsObject, template.datalist);
+    console.log(nutrientArray);
+    $("#nutrient-datalist").json2html(nutrientArray, template.datalist);
 }
 
 /*
@@ -143,8 +172,6 @@ const createObject = async () => {
     body['group'] = document.getElementById('group').value;
     body['name'] = document.getElementById('name').value;
     body['marketprice'] = document.getElementById('marketprice').value;
-    console.log(body);
-    console.log(baseApiUrl);
     console.log(JSON.stringify(body));
     let response = await fetch(baseApiUrl, {
         method: 'POST',
@@ -153,7 +180,25 @@ const createObject = async () => {
         },
         body: JSON.stringify(body)
     });
-    await response.json();
+    let ingredientJson = await response.json();
+    let ingredientNutrients = document.querySelectorAll('.ingredient-nutrient');
+    console.log(ingredientNutrients);
+    for (const ingredientNutrient of ingredientNutrients)
+    {
+        let nutrientId = ingredientNutrient.querySelector('[data-name="id"]').innerText;
+        let nutrientQuantity = ingredientNutrient.querySelector('[data-name="quantity"]').value;
+        let ingredientNutrientBody = {};
+        ingredientNutrientBody['nutrientId'] = nutrientId;
+        ingredientNutrientBody['quantity'] = nutrientQuantity;
+        let ingredientNutrientResponse = await fetch(baseApiUrl + `/${ingredientJson.id}/` + "nutrients", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredientNutrientBody)
+        });
+        await ingredientNutrientResponse.json();
+    }
     window.location.href = 'ingredients.html';
 }
 

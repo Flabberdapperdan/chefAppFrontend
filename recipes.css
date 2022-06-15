@@ -2,122 +2,41 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
 }
 
-/* //INPUT SECTION \\ */
-#recipe-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+#recipe-create-link {
+  height: 10%;
+  width: 20%;
+  text-decoration: none;
 
-  min-width: 80vw;
-  margin-top: 20px;
-  padding: 20px;
-
-  background-color: whitesmoke;
-  color: rgb(103, 113, 119);
-  ;
-  border-radius: 10px;
-}
-
-label {
-  font-family: 'Raleway', sans-serif;
-}
-
-input {
-  font-family: 'Raleway', sans-serif;
-  font-size: 15px;
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-}
-
-#add-ingredient {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5vw;
-}
-
-#add-ingredient-new {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-evenly;
-
-  min-width: 50vw;
-}
-
-#add-ingredient-new > input {
-  margin: 0 15px;
-  min-height: 15px;
-  max-height: 20px;
-  padding: 0;
-}
-
-#rfingredient {
-  flex-grow: 2;
-}
-
-#add-ingredient-submit {
-  max-width: 20px;
-  max-height: 20px;
-  text-align: center;
-  font-size: 15px;
-}
-
-#add-ingredient-all {
-  display: flex;
-  flex-flow: row wrap;
-}
-
-.ingredient-tile {
-  display: flex;
-  flex-flow: row nowrap;
-  border-radius: 15px;
-  margin: 3px 5px;
-
-  background-color: rgb(25, 143, 216);
-  color: azure;
-}
-
-.ingredient-tile > p {
-  margin: 5px;
-}
-
-.ingredient-tile > p:nth-child(1) {
-  padding-left: 10px;
-}
-
-.ingredient-tile > p:nth-last-child(1) {
-  padding-right: 5px;
-}
-
-.ingredient-tile > p:nth-last-child(1):hover {
-  cursor: pointer;
-  color:rgb(103, 113, 119);
-}
-
-input[type=submit] {
-  width: 100%;
   background-color: #56c048;
+  border: 1px black solid;
+  border-radius: 5px;
+
   color: white;
   padding: 14px 20px;
-  margin: 8px 0;
+  margin: 0;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 18px;
 }
 
-input[type=submit]:hover {
+#recipe-create-link > a {
+  text-decoration: none;
+  color: white;
+}
+
+#recipe-create-link:hover {
   background-color: #3f9644;
+  text-decoration: none; 
+  cursor: pointer;  
 }
 
 hr {
   color: #12290f;
   width: 70vw;
+  margin: 15px 0;
 }
 
 /* //DISPLAY SECTION \\ */
@@ -126,14 +45,34 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: whitesmoke;
+  border-radius: 10px;
 }
 
 #ingredient-result-table {
   min-width: 90%;
 }
 
-#ingredient-result-table > thead {
-  font-family: 'Raleway', cursive;
-  color: #92a054;
-  border-bottom: solid saddlebrown;
+.recipes-button {
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  margin: 5px 5px;
+  border: none;
+  background-color: whitesmoke;
+  border-radius: 4px;
+}
+
+.recipe-delete-button:hover {
+  cursor: pointer; 
+  background-color:#f57979; 
+}
+
+.recipe-add-button:hover {
+  cursor: pointer; 
+  background-color:#c4ffbc;
+}
+
+#add-ingredient {
+  width: auto;
 }

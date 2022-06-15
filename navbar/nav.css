@@ -1,7 +1,8 @@
 .navbar {
-  background-color: rgba(223, 236, 34, 0.863);
-  position: fixed;
-  top: 0;
+  position: relative;
+  min-height: 50px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
   width: 100%;
 }
 
@@ -43,4 +44,19 @@ li:last-child {
   float: right;
   border-left: 1px solid #bbb;
   padding-right: 3px;
+} 
+
+/* //GENERAL\\ */
+
+thead {
+  font-family: 'Raleway', cursive;
+  font-weight: 400;
+  color: #222;
+}
+
+tbody {
+  font-family: 'Raleway', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  color: #575757;
 }

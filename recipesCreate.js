@@ -55,7 +55,7 @@ const adjustUIForPost = async () => {
   let recipe = await getRecipe();
   document.getElementById("rfname").value = recipe.name;
   document.getElementById("rfcost").value = recipe.cost;
-  document.getElementById("rfsaleprice").value = recipe.salePrice;
+  document.getElementById("rfsaleprice").value = recipe.saleprice;
   document.getElementById("recipe-form-submit").value = "Recept Aanpassen";
   document.getElementById("recipe-form-submit").addEventListener("click", updateRecipe);
 }

@@ -57,15 +57,6 @@ const ingredientsGetDisplay = async () => {
       deleteIngredient(button.dataset.id);
     });
   });
-
-  //attach edit-button functionality
-  let editButtons = document.getElementsByClassName("ingredient-delete-button");
-  let editButtonsArr = Array.from(editButtons);
-  editButtonsArr.forEach(button => {
-    button.addEventListener("click", () => {
-      adjustUIForEdit(button.dataset.id);
-    });
-  });
 }
 
 const ingredientsGetAll = async () => {
@@ -105,36 +96,6 @@ const deleteIngredient = async (ingredientId) => {
   });
   let data = await JSONResponse.json();
   ingredientsGetDisplay();
-}
-
-const editIngredient = async () => {
-  let bodyObject = {
-    "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 10,
-    "amount": document.getElementById("ingredient-edit-input").value
-  }
-
-  //fetch
-  let JSONResponse = await fetch(`${url}api/recipe-ingredient`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(bodyObject)
-  });
-  let data = await JSONResponse.json();
-  console.log(data);
-
-  ingredientsGetDisplay();
-}
-
-const adjustUIForEdit = (id) => {
-  console.log(1);
-  let amountElement = document.getElementById(`ingredient-amount-edit-${id}`);
-  let newElement = docume.createElement('input');
-  newElement.id = "ingredient-edit-input";
-  //newElement.addEventListener("click", editIngredient);
-  amountElement.innerHTML;
 }
 
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);

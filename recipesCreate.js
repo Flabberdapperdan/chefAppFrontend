@@ -5,7 +5,7 @@ const addRecipe = async () => {
   let bodyObject = {
     "name": document.getElementById("rfname").value,
     "cost": document.getElementById("rfcost").value,
-    "salePrice": document.getElementById("rfsaleprice").value 
+    "saleprice": document.getElementById("rfsaleprice").value 
   }
 
   // fetch

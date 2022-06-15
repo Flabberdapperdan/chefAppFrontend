@@ -38,9 +38,9 @@ const ingredientsGetDisplay = async () => {
         </button>
       </th>
       <th>${recipeIngredient.name}</th>
-      <th id=${`ingredient-amount-edit-${id}`}">${recipeIngredient.amount}</th>
+      <th id=${`ingredient-amount-edit-${id}`}>${recipeIngredient.amount}</th>
       <th>
-        <button data-id="${id}" class="ingredient-button ingredient-edit-button">
+        <button data-id="${id}" id=${`ingredient-edit-button-${id}`} class="ingredient-button ingredient-edit-button">
           <span class="material-symbols-outlined">edit</span>
         </button>
       </th>
@@ -59,7 +59,7 @@ const ingredientsGetDisplay = async () => {
   });
 
   //attach edit-button functionality
-  let editButtons = document.getElementsByClassName("ingredient-delete-button");
+  let editButtons = document.getElementsByClassName("ingredient-edit-button");
   let editButtonsArr = Array.from(editButtons);
   editButtonsArr.forEach(button => {
     button.addEventListener("click", () => {
@@ -129,12 +129,26 @@ const editIngredient = async () => {
 }
 
 const adjustUIForEdit = (id) => {
-  console.log(1);
   let amountElement = document.getElementById(`ingredient-amount-edit-${id}`);
-  let newElement = docume.createElement('input');
+  let currentValue = amountElement.innerText;
+
+  //change number to inputfield
+  let newElement = document.createElement('input');
   newElement.id = "ingredient-edit-input";
+  newElement.value = currentValue;
+  amountElement.innerHTML = '';
+  amountElement.appendChild(newElement);
+  
   //newElement.addEventListener("click", editIngredient);
-  amountElement.innerHTML;
+
+
+  //change icon
+  let button = document.getElementById(`ingredient-edit-button-${id}`);
+  let spanElement = button.childNodes[0];
+  console.log(button);
+  console.log(spanElement);
+  button.childNodes[0].innerHTML = 'check_circle';
+
 }
 
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);

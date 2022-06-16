@@ -41,7 +41,9 @@ const template = {
         applySortAndOrder("name");
         page = 0;
         readBody(true);
-      }},
+      }, 'html':[
+        {'<>':'span', 'class':'material-symbols-outlined', 'text':'arrow_upward'},
+      ]},
       {'<>':'th', 'text':'Market Price', 'onclick':function(){
         applySortAndOrder("marketprice");
         page = 0;

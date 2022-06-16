@@ -6,17 +6,19 @@ const baseApiUrl = keys.url + 'api/ingredients';
 
 let jsonObject;
 
-let nutrientArray;
+let nutrientArray = [];
+let ingredientNutrientArray = [];
 
 let method = 'post';
 
 const template = {
     "form":{'<>':'div', 'id':'result-form', 'html':[
         {'<>':'label', 'text':'Code'},
-        {'<>':'input', 'id':'code', 'value':function(dataObject){
+        {'<>':'input', 'id':'code', 'type':'number', 'value':function(dataObject){
             if(method == 'put' && jsonObject.hasOwnProperty('code'))
             {
-                return dataObject.code;
+                console.log(dataObject.code);
+                return dataObject.code.toString();
             }
         }},
         {'<>':'label', 'text':'Group'},
@@ -34,10 +36,11 @@ const template = {
             }
         }},
         {'<>':'label', 'text':'Market Price'},
-        {'<>':'input', 'id':'marketprice', 'value':function(dataObject){
+        {'<>':'input', 'id':'marketprice', 'type':'number', 'step':'.01', 'value':function(dataObject){
             if(method == 'put' && jsonObject.hasOwnProperty('marketprice'))
             {
-                return dataObject.marketprice;
+                console.log(dataObject.marketprice);
+                return dataObject.marketprice.toString();
             }
         }},
         {'<>':'label', 'text':'Nutrients'},
@@ -53,41 +56,13 @@ const template = {
         {
             if(method == 'put' && jsonObject.hasOwnProperty('nutrients'))
             {
+                for (let nutrient of dataObject.nutrients)
+                {
+                    ingredientNutrientArray.push(nutrient.joinId);
+                }
                 return $.json2html(dataObject.nutrients, template.nutrient);
             }
         }},
-        //     {'<>':'tr', 'html':[
-        //         {'<>':'td', 'text':'${id}'},
-        //         {'<>':'td', html:[{'<>':'input', 'type':'number', 'value':'${quantity}'}]},
-        //         {'<>':'td', 'text':'${unit}'},
-        //         {'<>':'td', 'text':'${code}'},
-        //         {'<>':'td', 'text':'${name}'},
-        //         {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
-        //             (this[0].parentElement.parentElement).remove();
-        //           }}]},
-        //     ],'{}':function(dataObject){
-        //         if(method == 'put' && jsonObject.hasOwnProperty('nutrients'))
-        //         {
-        //             return dataObject.nutrients;
-        //         }
-        //     }}
-        // ]},
-        // {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Nutrients'}]}]},
-        // {'<>':'tr', 'html':[
-        //     {'<>':'td', 'text':'${quantity}${unit}'},
-        //     {'<>':'td', 'text':'${code}'},
-        //     {'<>':'td', 'text':'${name}'},
-        // ], '{}':function(){
-        //     const filteredNutrients = [];
-        //     for(let i in this.nutrients)
-        //     {
-        //         if(this.nutrients[i].quantity > 0)
-        //         {
-        //             filteredNutrients.push(this.nutrients[i]);
-        //         }
-        //     }
-        //     return filteredNutrients;
-        // }},
         {'<>':'button', 'text':'Save Ingredient', 'onclick':function(evObject){
             if(method == 'post')
             {
@@ -104,7 +79,7 @@ const template = {
         }, 'onchange':function(){
             console.log(this.value);
     }},
-    "nutrient":{'<>':'tr', 'class':'ingredient-nutrient', 'html':[
+    "nutrient":{'<>':'tr', 'class':'ingredient-nutrient', 'data-id':'${joinId}', 'html':[
         {'<>':'td', 'data-name':'id', 'text':'${id}'},
         {'<>':'td', html:[{'<>':'input', 'type':'number', 'data-name':'quantity', 'value':'${quantity}'}]},
         {'<>':'td', 'text':'${unit}'},
@@ -211,9 +186,8 @@ const updateObject = async (objectId) => {
     body['group'] = document.getElementById('group').value;
     body['name'] = document.getElementById('name').value;
     body['marketprice'] = document.getElementById('marketprice').value;
+    console.log(objectId);
     console.log(body);
-    console.log(baseApiUrl);
-    console.log(JSON.stringify(body));
     let response = await fetch(keys.url + "api/ingredients/" + objectId, {
         method: 'PUT',
         headers: {
@@ -221,8 +195,63 @@ const updateObject = async (objectId) => {
         },
         body: JSON.stringify(body)
     });
-    await response.json();
-    window.location.href = 'ingredients.html';
+    let ingredientJson = await response.json();
+    console.log(ingredientJson);
+    let ingredientNutrients = document.querySelectorAll('.ingredient-nutrient');
+    console.log(ingredientNutrients);
+    let doneIngredientNutrientIds = [];
+    for (const ingredientNutrient of ingredientNutrients)
+    {
+        console.log(ingredientNutrient);
+        let ingredientNutrientId = ingredientNutrient.getAttribute('data-id');
+        let submethod = 'POST';
+        if(ingredientNutrientId.length > 0)
+        {
+            submethod = 'PUT'
+            doneIngredientNutrientIds.push(parseInt(ingredientNutrientId));
+        }
+        console.log(ingredientNutrientId);
+        let nutrientId = ingredientNutrient.querySelector('[data-name="id"]').innerText;
+        let nutrientQuantity = ingredientNutrient.querySelector('[data-name="quantity"]').value;
+        let ingredientNutrientBody = {};
+        if(ingredientNutrientId.length > 0)
+        {
+            ingredientNutrientBody['joinId'] = ingredientNutrientId;
+        }
+        ingredientNutrientBody['nutrientId'] = nutrientId;
+        ingredientNutrientBody['quantity'] = nutrientQuantity;
+        console.log(ingredientNutrientBody);
+        let ingredientNutrientResponse = await fetch(baseApiUrl + `/${ingredientJson.id}/` + "nutrients", {
+            method: submethod,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredientNutrientBody)
+        });
+        await ingredientNutrientResponse.json();
+    }
+    console.log(doneIngredientNutrientIds);
+    for (const ingredientNutrientId of ingredientNutrientArray)
+    {
+        console.log(ingredientNutrientArray);
+        console.log(doneIngredientNutrientIds);
+        console.log(doneIngredientNutrientIds.indexOf(ingredientNutrientId));
+        // not in starting list
+        if(doneIngredientNutrientIds.indexOf(ingredientNutrientId) < 0)
+        {
+            let ingredientNutrientBody = {};
+            ingredientNutrientBody['joinId'] = ingredientNutrientId;
+            let ingredientNutrientResponse = await fetch(baseApiUrl + `/${ingredientJson.id}/` + "nutrients", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ingredientNutrientBody)
+            });
+            await ingredientNutrientResponse.json();
+        }
+    }
+    //window.location.href = 'ingredients.html';
 }
 
 window.onload = init;

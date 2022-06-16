@@ -32,9 +32,10 @@ const updateRecipe = async () => {
   let bodyObject = {
     "name": document.getElementById("rfname").value,
     "cost": document.getElementById("rfcost").value,
-    "salePrice": document.getElementById("rfsaleprice").value 
+    "saleprice": document.getElementById("rfsaleprice").value 
   }
   let recipeId = localStorage.getItem("recipeId");
+  console.log(bodyObject);
 
   // fetch
   let JSONResponse = await fetch(`${url}api/recipes/${recipeId}`, {
@@ -44,7 +45,8 @@ const updateRecipe = async () => {
     },
     body: JSON.stringify(bodyObject)
   });
-  let data = JSONResponse.json();
+  let data = await JSONResponse.json();
+  console.log(data);
 
   //redirect to recipes
   localStorage.setItem("recipeEdit", false);

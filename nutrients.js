@@ -1,10 +1,14 @@
+import {keys} from "./keys.js";
+
+const baseApiUrl = keys.url + "api/nutrients";
+
 const properties = ["id", "code", "group", "name", "unit"];
 let editMode = false;
 /*
 Get (read) all ingredients
 */
 const readObjects = async () => {
-  let response = await fetch("http://localhost:8080/api/nutrients");
+  let response = await fetch(baseApiUrl);
   console.log(response);
   let jsonArray = await response.json();
   console.log(jsonArray);
@@ -88,7 +92,7 @@ const createObject = async () => {
   }
   body += propertyValues.toString();
   body += "}";
-  let response = await fetch("http://localhost:8080/api/nutrients", {
+  let response = await fetch(baseApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -150,7 +154,7 @@ const updateObject = async (objectId) => {
   }
   body += propertyValues.toString();
   body += "}";
-  let response = await fetch("http://localhost:8080/api/nutrients/" + objectId, {
+  let response = await fetch(`${baseApiUrl}/${objectId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -165,7 +169,7 @@ Delete an ingredient
 */
 
 const deleteObject = async (objectId) => {
-  let response = await fetch(`http://localhost:8080/api/nutrients/${objectId}`, {
+  let response = await fetch(`${baseApiUrl}/${objectId}`, {
     method: 'DELETE'
   });
   location.reload();

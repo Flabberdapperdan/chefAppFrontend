@@ -1,5 +1,9 @@
+import {keys} from "./keys.js";
+
+const baseApiUrl = keys.url + "api/allergens";
+
 const deletOne = async (id) => {
-    let JSONResponse = await fetch(`http://localhost:8080/api/allergens/${id}`, {
+    let JSONResponse = await fetch(`${baseApiUrl}/${id}`, {
       method: 'DELETE'
     });
     getAll();
@@ -7,7 +11,7 @@ const deletOne = async (id) => {
   
   const getAll = async () => {
     //fetch
-    let JSONData = await fetch("http://localhost:8080/api/allergens");
+    let JSONData = await fetch(baseApiUrl);
     let data = await JSONData.json();
     
     //display
@@ -48,7 +52,7 @@ const deletOne = async (id) => {
       "code": codeInput
     }
   
-    let JSONResponse = await fetch("http://localhost:8080/api/allergens", {
+    let JSONResponse = await fetch(baseApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

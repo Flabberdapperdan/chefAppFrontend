@@ -4,20 +4,20 @@ const ingredientId = localStorage.getItem("ingredientId");
 
 const baseApiUrl = keys.url + `api/ingredients/${ingredientId}?nutrients=true`;
 
-let jsonObject;
+let ingredientObject;
 
 const template = {
     "header":{'html':[
-        {'<>':'h1', 'id':'result-header', 'text':'${name}'},
+        {'<>':'h1', 'id':'ingredient-header', 'text':'${name}'},
         {'<>':'span', 'class':'edit-button material-symbols-outlined', 'text':'change_circle', 'onclick':function(evObject){
             localStorage.setItem("ingredientId", evObject.obj.id);
             window.location.href = 'edit-ingredient.html';
         }},
         {'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
-            deleteObject(evObject.obj.id);
+            deleteIngredient(evObject.obj.id);
         }}
     ]},
-    "table":{'<>':'table', 'id':'result-table', 'html':[
+    "table":{'<>':'table', 'id':'ingredient-table', 'html':[
         {'<>':'tr', 'html':[
             {'<>':'td', html:[{'<>':'label', 'text':'Id'}]},
             {'<>':'td', html:[{'<>':'span', 'text':'${id}'}]},
@@ -40,9 +40,9 @@ const template = {
         ]},
         {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Nutrients'}]}]},
         {'<>':'tr', 'html':[
-            {'<>':'td', 'text':'${quantity}${unit}'},
-            {'<>':'td', 'text':'${code}'},
-            {'<>':'td', 'text':'${name}'},
+            {'<>':'td', 'text':'${quantity}${nutrient.unit}'},
+            {'<>':'td', 'text':'${nutrient.code}'},
+            {'<>':'td', 'text':'${nutrient.name}'},
         ], '{}':function(){
             const filteredNutrients = [];
             for(let i in this.nutrients)
@@ -61,34 +61,34 @@ console.log(ingredientId);
 
 function init()
 {
-    readObject(true);
+    readIngredient(true);
 }
 
 /*
 Get (read) ingredient by id
 */
-const fetchObject = async() => {
+const fetchIngredient = async() => {
     let apiUrl = baseApiUrl;
     let response = await fetch(apiUrl);
     return response.json();
 }
 
-const readObject = async (fetch = false) => {
+const readIngredient = async (fetch = false) => {
     if(fetch)
     {
-      jsonObject = await fetchObject();
+      ingredientObject = await fetchIngredient();
     }
-    console.log(jsonObject);
+    console.log(ingredientObject);
 
-    $("#result-header").json2html(jsonObject, template.header, {method:"replace"});
-    $("#result-table").json2html(jsonObject, template.table, {method:"replace"});
+    $("#ingredient-header").json2html(ingredientObject, template.header, {method:"replace"});
+    $("#ingredient-table").json2html(ingredientObject, template.table, {method:"replace"});
 }
 
 /*
 Delete an ingredient
 */
 
-const deleteObject = async (objectId) => {
+const deleteIngredient = async (objectId) => {
     let response = await fetch(keys.url + `api/ingredients/${objectId}`, {
         method: 'DELETE'
     });

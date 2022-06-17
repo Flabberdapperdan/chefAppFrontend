@@ -9,7 +9,7 @@ main {
 
 /* //INPUT SECTION \\ */
 
-#result {
+#ingredient-result {
   width: 80vw;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ main {
   border-radius: 10px;
 }
 
-#result-table {
+#ingredient-table {
   min-width: 90%;
 }
 

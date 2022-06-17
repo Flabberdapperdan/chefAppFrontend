@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="./allergens.js" type="module"></script>
+  <link rel="stylesheet" href="allergens.css">
+  <title>Document</title>
+</head>
+<body>
+
+  <header>
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("navbar/nav.html");
+      });
+    </script>
+  </header>
+
+  <main>
+    <div id="allergen-form">
+      <label>Allergeen</label>
+      <input id="alname" type="text"><br>
+      <input id="allergen-form-submit" type="submit" value="Allergeen Opslaan">
+    </div>
+    <hr>
+    <div id="allergen-result">
+        <p id="counter"></p>
+      <table id="allergen-result-table">
+        <thead>
+          <tr>
+            <th>Allergeen</th>
+          </tr>
+        </thead>
+        <tbody id="allergen-result-body"></tbody>
+      </table>
+    </div>
+  </main>
+
+  
+</body>
+</html>

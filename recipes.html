@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="./recipes.js" type="module"></script>
+  <link rel="stylesheet" href="recipes.css">
+  <title>Document</title>
+</head>
+<body>
+
+  <header>
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("../navbar/nav.html");
+      });
+    </script>
+  </header>
+
+  <main>
+    
+    <button id="recipe-create-link">
+      <a href="./recipesCreate.html">Nieuw Recept</a>
+    </button>
+
+    <hr>
+
+    <div id="ingredient-result">
+      <table id="ingredient-result-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Naam</th>
+            <th>Inkoopprijs</th>
+            <th>Verkoopprijs</th>
+          </tr>
+        </thead>
+        <tbody id="ingredient-result-body"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+  
+</body>
+</html>

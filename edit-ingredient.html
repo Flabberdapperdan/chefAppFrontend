@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../json2html.js"></script>
+  <link rel="stylesheet" href="edit-ingredient.css">
+  <script src="edit-ingredient.js" type="module"></script>
+  <title>Create Ingredient</title>
+</head>
+<body>
+  <header>
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("../navbar/nav.html");
+      });
+    </script>
+  </header>
+  <main>
+    <h1>New Ingredient</h1>
+    <div id="result">
+      <table id="result-form">
+      </table>
+      <datalist id="nutrient-datalist"></datalist>
+    </div>
+</body>
+</html>

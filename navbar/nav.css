@@ -1,24 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 .navbar {
+
   position: relative;
-  min-height: 50px;
+  min-height: 60px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   width: 100%;
+  box-shadow: 0 3px 10px 0 rgba(21, 24, 26, .1);
 }
 
 .navbar-list {
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 10%;
   overflow: hidden;
-  background-color: rgb(3, 170, 31);
 }
 
 .navbar-list > li {
   display: inline;
   float: left;
-  border-right: 1px solid #bbb;
-  background-color: #333;
 }
 
 .navbar-list > a {
@@ -29,14 +32,16 @@
 
 li a {
   display: block;
-  color: white;
+  color: rgb(102, 102, 102);
   text-align: center;
-  padding: 14px 16px;
+  padding: 18px 16px;
   text-decoration: none;
+  font-family: 'Raleway', sans-serif;
 }
 
 li a:hover {
-  background-color: #111;
+  border-bottom: 2px solid #56c048;
+  color: rgb(0, 104, 21);
 }
 
 li:last-child {

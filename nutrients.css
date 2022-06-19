@@ -1,0 +1,89 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#recipe-create-link {
+  height: 10%;
+  width: 20%;
+  text-decoration: none;
+
+  background-color: #56c048;
+  border: 1px black solid;
+  border-radius: 5px;
+
+  color: white;
+  padding: 14px 20px;
+  margin: 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#recipe-create-link > a {
+  text-decoration: none;
+  color: white;
+}
+
+#recipe-create-link:hover {
+  background-color: #3f9644;
+  text-decoration: none; 
+  cursor: pointer;  
+}
+
+hr {
+  color: #12290f;
+  width: 70vw;
+  margin: 15px 0;
+}
+
+/* //DISPLAY SECTION \\ */
+#nutrient-result {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: whitesmoke;
+  border-radius: 10px;
+}
+
+#nutrient-table {
+  min-width: 90%;
+}
+
+.recipes-button {
+  height: 30px;
+  width: 30px;
+  padding: 0;
+  margin: 5px 5px;
+  border: none;
+  background-color: whitesmoke;
+  border-radius: 4px;
+}
+
+.select-button:hover {
+  cursor: pointer; 
+  background-color:#FFFF00;
+}
+
+.edit-button:hover {
+  cursor: pointer;
+  background-color:#FFA500;
+}
+
+.delete-button:hover {
+  cursor: pointer; 
+  background-color:#f57979; 
+}
+
+.create-button:hover {
+  cursor: pointer; 
+  background-color:#c4ffbc;
+}
+
+.page-nav-button:hover {
+  cursor: pointer; 
+  background-color:#FFFF00;
+}

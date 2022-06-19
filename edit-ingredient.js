@@ -170,8 +170,9 @@ const fetchIngredient = async() => {
     return response.json();
 }
 
+// currently uses a workaround to avoid having a special endpoint interaction for ALL nutrients
 const fetchNutrients = async() => {
-    let apiUrl = keys.url + "api/nutrients";
+    let apiUrl = keys.url + "api/nutrients?size=1000";
     let response = await fetch(apiUrl);
     return response.json();
 }
@@ -202,7 +203,11 @@ const readIngredient = async (fetch = false) => {
     }
     if(fetch)
     {
-        nutrientArray = await fetchNutrients();
+        let nutrientsPage = await fetchNutrients();
+        for(let nutrient of nutrientsPage.nutrients)
+        {
+            nutrientArray.push(nutrient);
+        }
         allergenArray = await fetchAllergens();
     }
     console.log(nutrientArray);

@@ -2,7 +2,7 @@ import {keys} from "./keys.js";
 
 const ingredientId = localStorage.getItem("ingredientId");
 
-const baseApiUrl = keys.url + `api/ingredients/${ingredientId}?nutrients=true`;
+const baseApiUrl = keys.url + `api/ingredients/${ingredientId}?nutrients=true&allergens=true`;
 
 let ingredientObject;
 
@@ -53,6 +53,13 @@ const template = {
                 }
             }
             return filteredNutrients;
+        }},
+        {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Allergens'}]}]},
+        {'<>':'tr', 'html':[
+            {'<>':'td', 'text':'${allergen.code}'},
+            {'<>':'td', 'text':'${allergen.name}'},
+        ], '{}':function(){
+            return this.allergens;
         }},
     ]},
 };

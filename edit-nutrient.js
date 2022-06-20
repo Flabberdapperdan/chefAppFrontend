@@ -37,6 +37,7 @@ const template = {
                 return dataObject.code.toString();
             }
         }},
+        {'<>':'span', 'id':'code-error'},
         {'<>':'label', 'text':'Group'},
         {'<>':'input', 'id':'group', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('group'))
@@ -44,6 +45,7 @@ const template = {
                 return dataObject.group;
             }
         }},
+        {'<>':'span', 'id':'group-error'},
         {'<>':'label', 'text':'Name'},
         {'<>':'input', 'id':'name', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('name'))
@@ -51,6 +53,7 @@ const template = {
                 return dataObject.name;
             }
         }},
+        {'<>':'span', 'id':'name-error'},
         {'<>':'label', 'text':'Unit'},
         {'<>':'input', 'id':'unit', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('unit'))
@@ -58,6 +61,7 @@ const template = {
                 return dataObject.unit.toString();
             }
         }},
+        {'<>':'span', 'id':'unit-error'},
         {'<>':'button', 'text':'Save Nutrient', 'onclick':function(evObject){
             if(method == 'post')
             {
@@ -144,6 +148,27 @@ const createNutrient = async () => {
         body: JSON.stringify(nutrientBody)
     });
     let nutrientJson = await response.json();
+    if(!response.ok)
+    {
+        let errorNodes = document.getElementsByClassName('error-message');
+        console.log(errorNodes);
+        for (let errorNode of errorNodes)
+        {
+            errorNode.innerHTML = '';
+        }
+        for (let entry of Object.entries(nutrientJson))
+        {
+            let entryId = entry[0].toLowerCase() + "-error";
+            let entryNode = document.createElement('span');
+            entryNode.setAttribute('id', entryId);
+            entryNode.classList.add("error-message");
+            entryNode.append(document.createTextNode(entry[1]));
+            entryNode.append(document.createElement('br'));
+            console.log(entryId);
+            document.getElementById(entryId).replaceWith(entryNode);
+        }
+        return;
+    }
     for (const nutrientNutrient of nutrientNutrientArray)
     {
         let rowElement = $(`.nutrient-nutrient[data-index='${nutrientNutrient.index}']`)[0];
@@ -191,6 +216,27 @@ const updateNutrient = async (objectId) => {
         body: JSON.stringify(nutrientBody)
     });
     let nutrientJson = await response.json();
+    if(!response.ok)
+    {
+        let errorNodes = document.getElementsByClassName('error-message');
+        console.log(errorNodes);
+        for (let errorNode of errorNodes)
+        {
+            errorNode.innerHTML = '';
+        }
+        for (let entry of Object.entries(nutrientJson))
+        {
+            let entryId = entry[0].toLowerCase() + "-error";
+            let entryNode = document.createElement('span');
+            entryNode.setAttribute('id', entryId);
+            entryNode.classList.add("error-message");
+            entryNode.append(document.createTextNode(entry[1]));
+            entryNode.append(document.createElement('br'));
+            console.log(entryId);
+            document.getElementById(entryId).replaceWith(entryNode);
+        }
+        return;
+    }
     for (const nutrientNutrient of nutrientNutrientArray)
     {
         if(nutrientNutrient.hasOwnProperty('id'))

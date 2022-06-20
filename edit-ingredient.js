@@ -36,28 +36,40 @@ const template = {
             {
                 return dataObject.code.toString();
             }
+            else
+            {
+                return (0).toString();
+            }
         }},
-        {'<>':'label', 'text':'Group'},
+        {'<>':'span', 'id':'code-error'},
+        {'<>':'label', 'text':'Group*'},
         {'<>':'input', 'id':'group', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('group'))
             {
                 return dataObject.group;
             }
         }},
-        {'<>':'label', 'text':'Name'},
+        {'<>':'span', 'id':'group-error'},
+        {'<>':'label', 'text':'Name*'},
         {'<>':'input', 'id':'name', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('name'))
             {
                 return dataObject.name;
             }
         }},
-        {'<>':'label', 'text':'Market Price'},
+        {'<>':'span', 'id':'name-error'},
+        {'<>':'label', 'text':'Market Price*'},
         {'<>':'input', 'id':'marketprice', 'type':'number', 'step':'.01', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('marketprice'))
             {
                 return dataObject.marketprice.toString();
             }
+            else
+            {
+                return (0).toFixed(2).toString();
+            }
         }},
+        {'<>':'span', 'id':'marketprice-error'},
         {'<>':'label', 'text':'Nutrients'},
         {'<>':'br'},
         {'<>':'input', 'id':'add-nutrient-input', 'list':'nutrient-datalist', 'type':'text'},
@@ -65,13 +77,29 @@ const template = {
             let nutrientValue = $("#add-nutrient-input").val();
             let nutrientId = $(`#nutrient-datalist option[value='${nutrientValue}']`).attr('data-id');
             let nutrientObject = nutrientArray.find(obj => obj.id == nutrientId);
-            let ingredientNutrientObject = {};
-            ingredientNutrientObject['index'] = ingredientNutrientIndex++;
-            ingredientNutrientObject['nutrient'] = nutrientObject;
-            ingredientNutrientObject['method'] = 'POST';
-            ingredientNutrientArray.push(ingredientNutrientObject);
-            $("#nutrients-table").json2html(ingredientNutrientObject, template.ingredientNutrient);
+            if(nutrientObject)
+            {
+                let errorNode = document.createElement('span');
+                errorNode.id = 'add-nutrient-error';
+                $("#add-nutrient-error").replaceWith(errorNode);
+                let ingredientNutrientObject = {};
+                ingredientNutrientObject['index'] = ingredientNutrientIndex++;
+                ingredientNutrientObject['nutrient'] = nutrientObject;
+                ingredientNutrientObject['method'] = 'POST';
+                ingredientNutrientArray.push(ingredientNutrientObject);
+                $("#nutrients-table").json2html(ingredientNutrientObject, template.ingredientNutrient);
+            }
+            else
+            {
+                let errorNode = document.createElement('span');
+                errorNode.id = 'add-nutrient-error';
+                errorNode.classList.add('error-message');
+                errorNode.append(document.createElement('br'));
+                errorNode.append(`${nutrientValue} is an invalid nutrient.`);
+                $("#add-nutrient-error").replaceWith(errorNode);
+            }
         }},
+        {'<>':'span', 'id':'add-nutrient-error'},
         {'<>':'table', 'id':'nutrients-table', 'html':function(dataObject)
         {
             if(method == 'put' && dataObject.hasOwnProperty('nutrients'))
@@ -92,14 +120,30 @@ const template = {
             let allergenValue = $("#add-allergen-input").val();
             let allergenId = $(`#allergen-datalist option[value='${allergenValue}']`).attr('data-id');
             let allergenObject = allergenArray.find(obj => obj.id == allergenId);
-            let ingredientAllergenObject = {};
-            ingredientAllergenObject['index'] = ingredientAllergenIndex++;
-            ingredientAllergenObject['allergen'] = allergenObject;
-            ingredientAllergenObject['method'] = 'POST';
-            ingredientAllergenArray.push(ingredientAllergenObject);
-            $("#allergens-table").json2html(ingredientAllergenObject, template.ingredientAllergen);
-            console.log(ingredientAllergenArray);
+            if(allergenObject)
+            {
+                let errorNode = document.createElement('span');
+                errorNode.id = 'add-allergen-error';
+                $("#add-allergen-error").replaceWith(errorNode);
+                let ingredientAllergenObject = {};
+                ingredientAllergenObject['index'] = ingredientAllergenIndex++;
+                ingredientAllergenObject['allergen'] = allergenObject;
+                ingredientAllergenObject['method'] = 'POST';
+                ingredientAllergenArray.push(ingredientAllergenObject);
+                $("#allergens-table").json2html(ingredientAllergenObject, template.ingredientAllergen);
+                console.log(ingredientAllergenArray);
+            }
+            else
+            {
+                let errorNode = document.createElement('span');
+                errorNode.id = 'add-allergen-error';
+                errorNode.classList.add('error-message');
+                errorNode.append(document.createElement('br'));
+                errorNode.append(`${allergenValue} is an invalid allergen.`);
+                $("#add-allergen-error").replaceWith(errorNode);
+            }
         }},
+        {'<>':'span', 'id':'add-allergen-error'},
         {'<>':'table', 'id':'allergens-table', 'html':function(dataObject)
         {
             if(method == 'put' && dataObject.hasOwnProperty('allergens'))
@@ -234,6 +278,27 @@ const createIngredient = async () => {
         body: JSON.stringify(ingredientBody)
     });
     let ingredientJson = await response.json();
+    if(!response.ok)
+    {
+        let errorNodes = document.getElementsByClassName('error-message');
+        console.log(errorNodes);
+        for (let errorNode of errorNodes)
+        {
+            errorNode.innerHTML = '';
+        }
+        for (let entry of Object.entries(ingredientJson))
+        {
+            let entryId = entry[0].toLowerCase() + "-error";
+            let entryNode = document.createElement('span');
+            entryNode.setAttribute('id', entryId);
+            entryNode.classList.add("error-message");
+            entryNode.append(document.createTextNode(entry[1]));
+            entryNode.append(document.createElement('br'));
+            console.log(entryId);
+            document.getElementById(entryId).replaceWith(entryNode);
+        }
+        return;
+    }
     for (const ingredientNutrient of ingredientNutrientArray)
     {
         let rowElement = $(`.ingredient-nutrient[data-index='${ingredientNutrient.index}']`)[0];
@@ -281,6 +346,25 @@ const updateIngredient = async (objectId) => {
         body: JSON.stringify(ingredientBody)
     });
     let ingredientJson = await response.json();
+    if(!response.ok)
+    {
+        let errorNodes = document.getElementsByClassName('error-message');
+        for (let errorNode of errorNodes)
+        {
+            errorNode.innerHTML = '';
+        }
+        for (let entry of Object.entries(ingredientJson))
+        {
+            let entryId = entry[0] + "-error";
+            let entryNode = document.createElement('span');
+            entryNode.setAttribute('id', entryId);
+            entryNode.classList.add("error-message");
+            entryNode.append(document.createTextNode(entry[1]));
+            entryNode.append(document.createElement('br'));
+            document.getElementById(entryId).replaceWith(entryNode);
+        }
+        return;
+    }
     for (const ingredientNutrient of ingredientNutrientArray)
     {
         if(ingredientNutrient.hasOwnProperty('id'))

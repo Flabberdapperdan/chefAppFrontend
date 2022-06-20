@@ -25,3 +25,11 @@
 //   slides[slideIndex-1].style.display = "block";  
 //   dots[slideIndex-1].className += " active";
 // }
+
+    function getURL() {
+        alert("The URL of this page is: " + window.location.href);
+    }
+
+     
+
+

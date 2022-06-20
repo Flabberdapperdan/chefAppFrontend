@@ -63,7 +63,7 @@ const ingredientsGetDisplay = async () => {
   let editButtonsArr = Array.from(editButtons);
   editButtonsArr.forEach(button => {
     button.addEventListener("click", () => {
-      adjustUIForEdit(button.dataset.id);
+      adjustUIForEdit(button.dataset.id, recipeId);
     });
   });
 }
@@ -78,7 +78,7 @@ const ingredientsGetAll = async () => {
 const addIngredient = async () => {
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 5,
+    "ingredientId": 1,
     "amount": document.getElementById("ingredient-amount").value
   }
 
@@ -91,6 +91,7 @@ const addIngredient = async () => {
     body: JSON.stringify(bodyObject)
   });
   let data = await JSONResponse.json();
+  console.log(data);
 
   // clean-up
   document.getElementById("ingredient-amount").value = "";
@@ -107,15 +108,25 @@ const deleteIngredient = async (ingredientId) => {
   ingredientsGetDisplay();
 }
 
-const editIngredient = async () => {
+const editIngredient = async (recipeIngredientId, recipeId) => {
+  console.log(recipeIngredientId);
+  console.log(recipeId);
+
+  let inputField = document.getElementById(`ingredient-edit-input-${recipeIngredientId}`);
+  console.log(inputField);
+  let inputValue = document.getElementById(`ingredient-amount-edit-${recipeIngredientId}`).value;
+  console.log(inputValue);
+
+
+
   let bodyObject = {
-    "recipeId": localStorage.getItem("recipeId"),
+    "recipeId": recipeId,
     "ingredientId": 10,
-    "amount": document.getElementById("ingredient-edit-input").value
+    "amount": document.getElementById(`ingredient-amount-edit-${recipeIngredientId}`).children[0].value
   }
 
   //fetch
-  let JSONResponse = await fetch(`${url}api/recipe-ingredient`, {
+  let JSONResponse = await fetch(`${url}api/recipe-ingredient/${recipeId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json'
@@ -123,6 +134,8 @@ const editIngredient = async () => {
     body: JSON.stringify(bodyObject)
   });
   let data = await JSONResponse.json();
+  console.log(id);
+  console.log(document.getElementById("ingredient-amount-edit").value);
   console.log(data);
 
   ingredientsGetDisplay();
@@ -134,25 +147,44 @@ const adjustUIForEdit = (id) => {
 
   //change number to inputfield
   let newElement = document.createElement('input');
-  newElement.id = "ingredient-edit-input";
+  newElement.id = `ingredient-edit-input-${id}`;
   newElement.value = currentValue;
   amountElement.innerHTML = '';
   amountElement.appendChild(newElement);
   
   //change icon
   let button = document.getElementById(`ingredient-edit-button-${id}`);
-  let spanElement = button.children[0];
   button.children[0].innerHTML = 'check_circle';
-  button.addEventListener("click", editIngredient);
+  button.addEventListener("click", () => {
+    editIngredient(id);
+  });
+}
 
+const searchIngredient = async () => {
+  let htmlString = "";
+  let searchString = document.getElementById("ingredient-name").value;
+
+  const JSONdata = await fetch(`https://yc2205pythondata.azurewebsites.net/ingredienten/deelnaam/${searchString}`);
+  const data = await JSONdata.json();
+  for (const result in data) {
+  let rowString = `
+    <tr>
+      <td>${data[result]["Voedingsmiddelnaam/Dutch food name"]}</td>
+      <td>${data[result]["Food group"]}</td>
+    </tr>
+    `
+    document.getElementById("ingredienten-resultaat-body").innerHTML += rowString;
+  }
+  
 }
 
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);
+document.getElementById("ingredient-name").addEventListener("keyup", searchIngredient);
 
 const onLoadCalls = () => {
   recipeGetDisplay();
   ingredientsGetDisplay();
-  ingredientsGetAll();
+  //ingredientsGetAll();
 }
 
 document.body.onload = onLoadCalls;

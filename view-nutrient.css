@@ -9,7 +9,7 @@ main {
 
 /* //INPUT SECTION \\ */
 
-#ingredient-result {
+#nutrient-result {
   width: 80vw;
   display: flex;
   flex-direction: column;
@@ -18,7 +18,7 @@ main {
   border-radius: 10px;
 }
 
-#ingredient-table {
+#nutrient-table {
   min-width: 90%;
 }
 
@@ -38,13 +38,13 @@ input {
   box-sizing: border-box;
 }
 
-#add-ingredient {
+#add-nutrient {
   display: flex;
   flex-direction: column;
   margin-left: 5vw;
 }
 
-#add-ingredient-new {
+#add-nutrient-new {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-evenly;
@@ -52,30 +52,30 @@ input {
   min-width: 50vw;
 }
 
-#add-ingredient-new > input {
+#add-nutrient-new > input {
   margin: 0 15px;
   min-height: 15px;
   max-height: 20px;
   padding: 0;
 }
 
-#rfingredient {
+#rfnutrient {
   flex-grow: 2;
 }
 
-#add-ingredient-submit {
+#add-nutrient-submit {
   max-width: 20px;
   max-height: 20px;
   text-align: center;
   font-size: 15px;
 }
 
-#add-ingredient-all {
+#add-nutrient-all {
   display: flex;
   flex-flow: row wrap;
 }
 
-.ingredient-tile {
+.nutrient-tile {
   display: flex;
   flex-flow: row nowrap;
   border-radius: 15px;
@@ -85,19 +85,19 @@ input {
   color: azure;
 }
 
-.ingredient-tile > p {
+.nutrient-tile > p {
   margin: 5px;
 }
 
-.ingredient-tile > p:nth-child(1) {
+.nutrient-tile > p:nth-child(1) {
   padding-left: 10px;
 }
 
-.ingredient-tile > p:nth-last-child(1) {
+.nutrient-tile > p:nth-last-child(1) {
   padding-right: 5px;
 }
 
-.ingredient-tile > p:nth-last-child(1):hover {
+.nutrient-tile > p:nth-last-child(1):hover {
   cursor: pointer;
   color:rgb(103, 113, 119);
 }

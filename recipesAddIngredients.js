@@ -175,7 +175,6 @@ const searchIngredient = async () => {
     `
     document.getElementById("ingredienten-resultaat-body").innerHTML += rowString;
   }
-  
 }
 
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);

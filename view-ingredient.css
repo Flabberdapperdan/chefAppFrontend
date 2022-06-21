@@ -132,3 +132,12 @@ hr {
   cursor: pointer; 
   background-color:#f57979; 
 }
+
+.select-button {
+  text-decoration: underline;
+}
+
+.select-button:hover {
+  cursor: pointer; 
+  background-color:#FFFF00;
+}

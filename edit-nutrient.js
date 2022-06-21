@@ -169,33 +169,6 @@ const createNutrient = async () => {
         }
         return;
     }
-    for (const nutrientNutrient of nutrientNutrientArray)
-    {
-        let rowElement = $(`.nutrient-nutrient[data-index='${nutrientNutrient.index}']`)[0];
-        let nutrientNutrientBody = {};
-        nutrientNutrientBody['quantity'] = rowElement.querySelector('[data-name="quantity"]').value;
-        let nutrientNutrientResponse = await fetch(baseApiUrl + `/${nutrientJson.id}/nutrients/${nutrientNutrient.nutrient.id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nutrientNutrientBody)
-        });
-        await nutrientNutrientResponse.json();
-    }
-    for (const nutrientAllergen of nutrientAllergenArray)
-    {
-        let rowElement = $(`.nutrient-allergen[data-index='${nutrientAllergen.index}']`)[0];
-        let nutrientAllergenBody = {};
-        let nutrientAllergenResponse = await fetch(baseApiUrl + `/${nutrientJson.id}/allergens/${nutrientAllergen.allergen.id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nutrientAllergenBody)
-        });
-        await nutrientAllergenResponse.json();
-    }
     window.location.href = 'nutrients.html';
 }
 

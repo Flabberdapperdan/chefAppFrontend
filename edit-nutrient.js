@@ -38,7 +38,7 @@ const template = {
             }
         }},
         {'<>':'span', 'id':'code-error'},
-        {'<>':'label', 'text':'Group'},
+        {'<>':'label', 'text':'Group*'},
         {'<>':'input', 'id':'group', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('group'))
             {
@@ -46,7 +46,7 @@ const template = {
             }
         }},
         {'<>':'span', 'id':'group-error'},
-        {'<>':'label', 'text':'Name'},
+        {'<>':'label', 'text':'Name*'},
         {'<>':'input', 'id':'name', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('name'))
             {

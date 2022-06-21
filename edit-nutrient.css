@@ -109,3 +109,8 @@ button:hover {
 .error-message {
   color: red;
 }
+
+.delete-button:hover {
+  cursor: pointer; 
+  background-color:#f57979; 
+}

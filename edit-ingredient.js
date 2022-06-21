@@ -31,6 +31,7 @@ const template = {
     ]},
     "form":{'<>':'div', 'id':'ingredient-form', 'html':[
         {'<>':'label', 'text':'Code'},
+        {'<>':'br'},
         {'<>':'input', 'id':'code', 'type':'number', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('code'))
             {
@@ -42,7 +43,9 @@ const template = {
             }
         }},
         {'<>':'span', 'id':'code-error'},
+        {'<>':'br'},
         {'<>':'label', 'text':'Group*'},
+        {'<>':'br'},
         {'<>':'input', 'id':'group', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('group'))
             {
@@ -50,7 +53,9 @@ const template = {
             }
         }},
         {'<>':'span', 'id':'group-error'},
+        {'<>':'br'},
         {'<>':'label', 'text':'Name*'},
+        {'<>':'br'},
         {'<>':'input', 'id':'name', 'value':function(dataObject){
             if(method == 'put' && dataObject.hasOwnProperty('name'))
             {
@@ -58,18 +63,24 @@ const template = {
             }
         }},
         {'<>':'span', 'id':'name-error'},
+        {'<>':'br'},
         {'<>':'label', 'text':'Market Price*'},
-        {'<>':'input', 'id':'marketprice', 'type':'number', 'step':'.01', 'value':function(dataObject){
-            if(method == 'put' && dataObject.hasOwnProperty('marketprice'))
-            {
-                return dataObject.marketprice.toString();
-            }
-            else
-            {
-                return (0).toFixed(2).toString();
-            }
-        }},
+        {'<>':'br'},
+        {'<>':'div', 'class':'max-width', 'html':[
+            {'<>':'span', 'text':'€ '},
+            {'<>':'input', 'id':'marketprice', 'type':'number', 'step':'.01', 'value':function(dataObject){
+                if(method == 'put' && dataObject.hasOwnProperty('marketprice'))
+                {
+                    return dataObject.marketprice.toFixed(2).toString();
+                }
+                else
+                {
+                    return (0).toFixed(2).toString();
+                }
+            }},
+        ]},
         {'<>':'span', 'id':'marketprice-error'},
+        {'<>':'br'},
         {'<>':'label', 'text':'Nutrients'},
         {'<>':'br'},
         {'<>':'input', 'id':'add-nutrient-input', 'list':'nutrient-datalist', 'type':'text'},
@@ -113,6 +124,7 @@ const template = {
                 return $.json2html(ingredientNutrientArray, template.ingredientNutrient);
             }
         }},
+        {'<>':'br'},
         {'<>':'label', 'text':'Allergens'},
         {'<>':'br'},
         {'<>':'input', 'id':'add-allergen-input', 'list':'allergen-datalist', 'type':'text'},
@@ -157,7 +169,7 @@ const template = {
                 return $.json2html(ingredientAllergenArray, template.ingredientAllergen);
             }
         }},
-        {'<>':'button', 'text':'Save Ingredient', 'onclick':function(evObject){
+        {'<>':'button', 'type':'submit', 'text':'Save Ingredient', 'onclick':function(evObject){
             if(method == 'post')
             {
                 createIngredient();
@@ -175,7 +187,16 @@ const template = {
     }},
     "ingredientNutrient":{'<>':'tr', 'class':'ingredient-nutrient', 'data-index':'${index}', 'data-id':'${id}', 'html':[
         {'<>':'td', 'data-name':'id', 'text':'${nutrient.id}'},
-        {'<>':'td', html:[{'<>':'input', 'type':'number', 'data-name':'quantity', 'value':'${quantity}'}]},
+        {'<>':'td', html:[{'<>':'input', 'type':'number', 'data-name':'quantity', 'value':function(dataObject){
+            if(dataObject.quantity)
+            {
+                return dataObject.quantity.toFixed(2).toString();
+            }
+            else
+            {
+                return (0).toFixed(2).toString();
+            }
+        }}]},
         {'<>':'td', 'text':'${nutrient.unit}'},
         {'<>':'td', 'text':'${nutrient.code}'},
         {'<>':'td', 'text':'${nutrient.name}'},

@@ -29,7 +29,7 @@ label {
 input {
   font-family: 'Raleway', sans-serif;
   font-size: 15px;
-  width: 100%;
+  width: 80%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -45,7 +45,7 @@ label {
 input {
   font-family: 'Raleway', sans-serif;
   font-size: 15px;
-  width: 100%;
+  width: 80%;
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -70,7 +70,7 @@ input {
 }
 
 input[type=submit] {
-  width: 100%;
+  width: 80%;
   background-color: #56c048;
   color: white;
   padding: 14px 20px;
@@ -83,6 +83,14 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #3f9644;
+}
+
+#code {
+  width: auto;
+}
+
+#marketprice {
+  width: auto;
 }
 
 hr {
@@ -108,4 +116,9 @@ button:hover {
 
 .error-message {
   color: red;
+}
+
+.delete-button:hover {
+  cursor: pointer; 
+  background-color:#f57979; 
 }

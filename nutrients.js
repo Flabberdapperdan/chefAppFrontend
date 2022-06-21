@@ -85,7 +85,7 @@ const template = {
     ], '{}':function(){return(this.nutrients)}},
   ]},
   "footer":{'<>':'tfoot', 'id':'nutrient-table-footer', 'html':[
-    {'<>':'tr', 'html':[
+/*     {'<>':'tr', 'html':[
       {'<>':'td'},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
@@ -94,7 +94,7 @@ const template = {
       {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
         createNutrient();
       }}]},
-    ]},
+    ]}, */
     {'<>':'tr', 'html':[
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
         page = 0;

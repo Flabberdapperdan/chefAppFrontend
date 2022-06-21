@@ -68,8 +68,8 @@ const getAllRecipes = async () => {
     button.addEventListener("click", () => {
       localStorage.setItem("recipeId", button.dataset.id);
       window.location.href = 'recipesAddIngredients.html';
-    })
-  })
+    });
+  });
 
   //attach edit-event
   let editButtons = document.getElementsByClassName("recipe-edit-button");
@@ -79,8 +79,8 @@ const getAllRecipes = async () => {
       localStorage.setItem("recipeId", button.dataset.id);
       localStorage.setItem("recipeEdit", true);
       window.location.href = 'recipesCreate.html';
-    })
-  })
+    });
+  });
 }
 
 // DOM-MANIPULATION \\

@@ -12,7 +12,7 @@ let sortBy = "id";
 let orderBy = "asc";
 
 const template = {
-  "header":{'<>':'thead', 'id':'table-header', 'html':[
+  "header":{'<>':'thead', 'id':'ingredient-table-header', 'html':[
     {'<>':'tr', 'html':[
       {'<>':'td', 'html':[
         {'<>':'button', 'text':'Create Ingredient', 'onclick':function(){
@@ -25,29 +25,29 @@ const template = {
       {'<>':'th', 'text':'Id', 'onclick':function(){
         applySortAndOrder("id");
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }},
       {'<>':'th', 'text':'Code', 'onclick':function(){
         applySortAndOrder("code");
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }},
       {'<>':'th', 'text':'Group', 'onclick':function(){
         applySortAndOrder("group");
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }},
       {'<>':'th', 'text':'Name', 'onclick':function(){
         applySortAndOrder("name");
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }, 'html':[
         {'<>':'span', 'class':'material-symbols-outlined', 'text':'arrow_upward'},
       ]},
       {'<>':'th', 'text':'Market Price', 'onclick':function(){
         applySortAndOrder("marketprice");
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }},
       {'<>':'th', 'html':[{'<>':'select', 'html':[
           {'<>':'option', 'value':'10', 'text':'10'},
@@ -59,11 +59,11 @@ const template = {
       ], 'onchange':function(){
         page = 0;
         size = this.val();
-        readBody(true);
+        readTableBody(true);
       }}]},
     ]},
   ]},
-  "body":{'<>':'tbody', 'id':'table-body', 'html':[
+  "body":{'<>':'tbody', 'id':'ingredient-table-body', 'html':[
     {'<>':'tr', 'data-id':'${id}', 'html':[
       {'<>':'td', 'text':'${id}'},
       {'<>':'td', 'text':'${code}'},
@@ -80,11 +80,11 @@ const template = {
         window.location.href = 'edit-ingredient.html';
       }}]},
       {'<>':'td', 'html':[{'<>':'span', 'class':'delete-button material-symbols-outlined', 'text':'delete', 'onclick':function(evObject){
-        deleteObject(evObject.obj.id);
+        deleteIngredient(evObject.obj.id);
       }}]},
     ], '{}':function(){return(this.ingredients)}},
   ]},
-  "footer":{'<>':'tfoot', 'id':'table-footer', 'html':[
+  "footer":{'<>':'tfoot', 'id':'ingredient-table-footer', 'html':[
     {'<>':'tr', 'html':[
       {'<>':'td'},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
@@ -92,13 +92,13 @@ const template = {
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'name'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'marketprice'}]},
       {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
-        createObject();
+        createIngredient();
       }}]},
     ]},
     {'<>':'tr', 'html':[
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
         page = 0;
-        readBody(true);
+        readTableBody(true);
       }, 'style':function(){
         if(page == 0)
         {
@@ -107,7 +107,7 @@ const template = {
       }}]},
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_left', 'onclick':function(){
         page--;
-        readBody(true);
+        readTableBody(true);
       }, 'style':function(){
         if(page == 0)
         {
@@ -117,7 +117,7 @@ const template = {
       {'<>':'td', 'text':'Page ${currentPage} of ${totalPages}'},
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'chevron_right', 'onclick':function(){
         page++;
-        readBody(true);
+        readTableBody(true);
       }, 'style':function(dataObject){
         if(page == dataObject.totalPages - 1)
         {
@@ -126,7 +126,7 @@ const template = {
       }}]},
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_right', 'onclick':function(evObject){
         page = evObject.obj.totalPages - 1;
-        readBody(true);
+        readTableBody(true);
       }, 'style':function(dataObject){
         if(page == dataObject.totalPages - 1)
         {
@@ -147,13 +147,13 @@ function init()
   {
     size = queryParams.get('size');
   }
-  readTable(true);
+  readIngredients(true);
 }
 
 /*
 Get (read) all ingredients
 */
-const fetchObject = async() => {
+const fetchIngredients = async() => {
   let apiUrl = baseApiUrl + `?page=${page}&size=${size}&sort_by=${sortBy}&order_by=${orderBy}`;
   let response = await fetch(apiUrl);
   return response.json();
@@ -179,71 +179,67 @@ function applySortAndOrder(value)
   }
 }
 
-const readTable = async (fetch = false) => {
+const readIngredients = async (fetch = false) => {
   if(fetch)
   {
-    jsonObject = await fetchObject();
+    jsonObject = await fetchIngredients();
   }
   console.log(jsonObject);
 
-  readHeader();
-  readBody();
+  readTableHeader();
+  readTableBody();
 }
 
-const readHeader = async (fetch = false) => {
+const readTableHeader = async (fetch = false) => {
   if(fetch)
   {
-    jsonObject = await fetchObject();
+    jsonObject = await fetchIngredients();
   }
-  console.log(jsonObject);
   
-  $("#table-header").json2html(jsonObject, template.header, {method:"replace"});
+  $("#ingredient-table-header").json2html(jsonObject, template.header, {method:"replace"});
 }
 
-const readBody = async (fetch = false) => {
+const readTableBody = async (fetch = false) => {
   if(fetch)
   {
-    jsonObject = await fetchObject();
+    jsonObject = await fetchIngredients();
   }
-  console.log(jsonObject);
 
-  $("#table-body").json2html(jsonObject, template.body, {method:"replace"});
-  $("#table-footer").json2html(jsonObject, template.footer, {method:"replace"});
+  $("#ingredient-table-body").json2html(jsonObject, template.body, {method:"replace"});
+  $("#ingredient-table-footer").json2html(jsonObject, template.footer, {method:"replace"});
 }
 
 /*
 Post (create) an ingredient
 */
 
-const createObject = async () => {
-  let body = {};
-  body['code'] = document.querySelector('[data-name="code"]').value;
-  body['group'] = document.querySelector('[data-name="group"]').value;
-  body['name'] = document.querySelector('[data-name="name"]').value;
-  body['marketprice'] = document.querySelector('[data-name="marketprice"]').value;
-  console.log(body);
-  console.log(baseApiUrl);
-  console.log(JSON.stringify(body));
+const createIngredient = async () => {
+  let ingredientObject = {};
+  ingredientObject['code'] = document.querySelector('[data-name="code"]').value;
+  ingredientObject['group'] = document.querySelector('[data-name="group"]').value;
+  ingredientObject['name'] = document.querySelector('[data-name="name"]').value;
+  ingredientObject['marketprice'] = document.querySelector('[data-name="marketprice"]').value;
+  console.log(ingredientObject);
   let response = await fetch(baseApiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(ingredientObject),
   });
-  let jsonObject = await response.json();
-  readBody(true);
+  await response.json();
+  readTableBody(true);
 }
 
 /*
 Delete an ingredient
 */
 
-const deleteObject = async (objectId) => {
-  let response = await fetch(keys.url + `api/ingredients/${objectId}`, {
+const deleteIngredient = async (ingredientId) => {
+  let response = await fetch(keys.url + `api/ingredients/${ingredientId}`, {
     method: 'DELETE'
   });
-  readBody(true);
+  readTableBody(true);
 }
 
 window.onload = init;

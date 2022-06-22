@@ -38,9 +38,13 @@ const ingredientsGetDisplay = async () => {
         </button>
       </th>
       <th>${recipeIngredient.name}</th>
-      <th id=${`ingredient-amount-edit-${id}`}">${recipeIngredient.amount}</th>
+      <th id=${`ingredient-amount-edit-${id}`}>${recipeIngredient.amount}</th>
       <th>
-        <button data-id="${id}" class="ingredient-button ingredient-edit-button">
+        <button
+          data-id="${id}" 
+          data-recipe-id=${recipeId}
+          id=${`ingredient-edit-button-${id}`} 
+          class="ingredient-button ingredient-edit-button">
           <span class="material-symbols-outlined">edit</span>
         </button>
       </th>
@@ -57,6 +61,15 @@ const ingredientsGetDisplay = async () => {
       deleteIngredient(button.dataset.id);
     });
   });
+
+  //attach edit-button functionality
+  let editButtons = document.getElementsByClassName("ingredient-edit-button");
+  let editButtonsArr = Array.from(editButtons);
+  editButtonsArr.forEach(button => {
+    button.addEventListener("click", () => {
+      adjustUIForEdit(button.dataset.id, button.dataset.recipeId);
+    });
+  });
 }
 
 const ingredientsGetAll = async () => {
@@ -69,7 +82,7 @@ const ingredientsGetAll = async () => {
 const addIngredient = async () => {
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 5,
+    "ingredientId": 1,
     "amount": document.getElementById("ingredient-amount").value
   }
 
@@ -82,6 +95,7 @@ const addIngredient = async () => {
     body: JSON.stringify(bodyObject)
   });
   let data = await JSONResponse.json();
+  console.log(data);
 
   // clean-up
   document.getElementById("ingredient-amount").value = "";
@@ -98,12 +112,55 @@ const deleteIngredient = async (ingredientId) => {
   ingredientsGetDisplay();
 }
 
+const editIngredient = async (recipeIngredientId, recipeId) => {
+  let bodyObject = {
+    "recipeId": recipeId,
+    "ingredientId": 10,
+    "amount": localStorage.getItem("ingredientAmount")
+  }
+
+  //fetch
+  let JSONResponse = await fetch(`${url}api/recipe-ingredient/${recipeIngredientId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bodyObject)
+  });
+  let data = await JSONResponse.json();
+
+  ingredientsGetDisplay();
+}
+
+const adjustUIForEdit = (id, recipeId) => {
+  let amountElement = document.getElementById(`ingredient-amount-edit-${id}`);
+  let currentValue = amountElement.innerText;
+
+  //change number to inputfield
+  let newElement = document.createElement('input');
+  newElement.id = `ingredient-edit-input-${id}`;
+  newElement.value = currentValue;
+  amountElement.innerHTML = '';
+  amountElement.appendChild(newElement);
+  
+  //change icon and add events
+  let button = document.getElementById(`ingredient-edit-button-${id}`);
+  button.children[0].innerHTML = 'check_circle';
+  button.addEventListener("click", () => {
+    editIngredient(id, recipeId);
+  });
+  let input = document.getElementById(`ingredient-edit-input-${id}`);
+  input.addEventListener("keyup", () => {
+    localStorage.setItem("ingredientAmount", input.value);
+  });
+}
+
 document.getElementById("add-ingredient-button").addEventListener("click", addIngredient);
 
 const onLoadCalls = () => {
   recipeGetDisplay();
   ingredientsGetDisplay();
-  ingredientsGetAll();
+  //ingredientsGetAll();
 }
 
 document.body.onload = onLoadCalls;

@@ -1,2 +1,4 @@
 node_modules/*
-#keys.js
+.vscode/*
+.vscode/settings.json
+keys.js

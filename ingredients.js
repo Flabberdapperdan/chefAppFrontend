@@ -19,6 +19,11 @@ const template = {
           localStorage.removeItem("ingredientId");
           window.location.href = 'edit-ingredient.html';
         }}
+      ]},
+      {'<>':'td', 'html':[
+        {'<>':'button', 'text':'Import Ingredient', 'onclick':function(){
+          window.location.href = 'import-ingredient.html';
+        }}
       ]}
     ]},
     {'<>':'tr', 'html':[
@@ -74,7 +79,9 @@ const template = {
           window.location.href = 'view-ingredient.html';
         }}
       ]},
-      {'<>':'td', 'text':'${marketprice}'},
+      {'<>':'td', 'text':function(dataObject){
+        return '€' + dataObject.marketprice.toFixed(2);
+      }},
       {'<>':'td', 'html':[{'<>':'span', 'class':'edit-button material-symbols-outlined', 'text':'change_circle', 'onclick':function(evObject){
         localStorage.setItem("ingredientId", evObject.obj.id);
         window.location.href = 'edit-ingredient.html';
@@ -85,7 +92,7 @@ const template = {
     ], '{}':function(){return(this.ingredients)}},
   ]},
   "footer":{'<>':'tfoot', 'id':'ingredient-table-footer', 'html':[
-    {'<>':'tr', 'html':[
+/*     {'<>':'tr', 'html':[
       {'<>':'td'},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'code'}]},
       {'<>':'td', 'html':[{'<>':'input', 'type':'text', 'data-name':'group'}]},
@@ -94,7 +101,7 @@ const template = {
       {'<>':'td', 'html':[{'<>':'span', 'class':'create-button material-symbols-outlined', 'text':'add', 'onclick':function(){
         createIngredient();
       }}]},
-    ]},
+    ]}, */
     {'<>':'tr', 'html':[
       {'<>':'td', 'html':[{'<>':'span', 'class':'page-nav-button material-symbols-outlined', 'text':'keyboard_double_arrow_left', 'onclick':function(){
         page = 0;

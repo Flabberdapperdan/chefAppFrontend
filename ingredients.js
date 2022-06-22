@@ -144,14 +144,11 @@ const template = {
   ]},
 };
 
-function init()
-{
-  if(queryParams.has('page'))
-  {
+function init() {
+  if (queryParams.has('page')) {
     page = queryParams.get('page');
   }
-  if(queryParams.has('size'))
-  {
+  if (queryParams.has('size')) {
     size = queryParams.get('size');
   }
   readIngredients(true);
@@ -166,29 +163,21 @@ const fetchIngredients = async() => {
   return response.json();
 }
 
-function applySortAndOrder(value)
-{
-  if(sortBy == value)
-  {
-    if(orderBy == "asc")
-    {
+function applySortAndOrder(value) {
+  if(sortBy == value) {
+    if(orderBy == "asc") {
       orderBy = "desc";
-    }
-    else
-    {
+    } else {
       orderBy = "asc";
     }
-  }
-  else
-  {
+  } else {
     sortBy = value;
     orderBy = "asc";
   }
 }
 
 const readIngredients = async (fetch = false) => {
-  if(fetch)
-  {
+  if(fetch) {
     jsonObject = await fetchIngredients();
   }
   console.log(jsonObject);
@@ -198,22 +187,20 @@ const readIngredients = async (fetch = false) => {
 }
 
 const readTableHeader = async (fetch = false) => {
-  if(fetch)
-  {
+  if (fetch) {
     jsonObject = await fetchIngredients();
   }
   
-  $("#ingredient-table-header").json2html(jsonObject, template.header, {method:"replace"});
+  $("#ingredient-table-header").json2html(jsonObject, template.header, { method: "replace" });
 }
 
 const readTableBody = async (fetch = false) => {
-  if(fetch)
-  {
+  if (fetch) {
     jsonObject = await fetchIngredients();
   }
 
-  $("#ingredient-table-body").json2html(jsonObject, template.body, {method:"replace"});
-  $("#ingredient-table-footer").json2html(jsonObject, template.footer, {method:"replace"});
+  $("#ingredient-table-body").json2html(jsonObject, template.body, { method: "replace" });
+  $("#ingredient-table-footer").json2html(jsonObject, template.footer, { method: "replace" });
 }
 
 /*

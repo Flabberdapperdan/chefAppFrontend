@@ -82,7 +82,7 @@ const ingredientsGetAll = async () => {
 const addIngredient = async () => {
   let bodyObject = {
     "recipeId": localStorage.getItem("recipeId"),
-    "ingredientId": 1,
+    "ingredientId": 67,
     "amount": document.getElementById("ingredient-amount").value
   }
 

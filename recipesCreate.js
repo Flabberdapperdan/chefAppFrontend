@@ -4,7 +4,6 @@ const { url } = keys;
 const addRecipe = async () => {
   let bodyObject = {
     "name": document.getElementById("rfname").value,
-    "cost": document.getElementById("rfcost").value,
     "saleprice": document.getElementById("rfsaleprice").value 
   }
 
@@ -31,7 +30,6 @@ const getRecipe = async () => {
 const updateRecipe = async () => {
   let bodyObject = {
     "name": document.getElementById("rfname").value,
-    "cost": document.getElementById("rfcost").value,
     "saleprice": document.getElementById("rfsaleprice").value 
   }
   let recipeId = localStorage.getItem("recipeId");
@@ -56,7 +54,6 @@ const updateRecipe = async () => {
 const adjustUIForPost = async () => {
   let recipe = await getRecipe();
   document.getElementById("rfname").value = recipe.name;
-  document.getElementById("rfcost").value = recipe.cost;
   document.getElementById("rfsaleprice").value = recipe.saleprice;
   document.getElementById("recipe-form-submit").value = "Recept Aanpassen";
   document.getElementById("recipe-form-submit").addEventListener("click", updateRecipe);

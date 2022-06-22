@@ -36,13 +36,20 @@ const template = {
         ]},
         {'<>':'tr', 'html':[
             {'<>':'td', html:[{'<>':'label', 'text':'Market Price'}]},
-            {'<>':'td', html:[{'<>':'span', 'text':'${marketprice}'}]},
+            {'<>':'td', html:[{'<>':'td', 'text':function(dataObject){
+                return '€' + dataObject.marketprice.toFixed(2);
+            }},
         ]},
         {'<>':'tr', 'html':[{'<>':'td', html:[{'<>':'label', 'text':'Nutrients'}]}]},
         {'<>':'tr', 'html':[
             {'<>':'td', 'text':'${quantity}${nutrient.unit}'},
             {'<>':'td', 'text':'${nutrient.code}'},
-            {'<>':'td', 'text':'${nutrient.name}'},
+            {'<>':'td', html:[
+                {'<>':'span', 'class':'select-button', 'text':'${nutrient.name}', 'onclick':function(evObject){
+                    localStorage.setItem("nutrientId", evObject.obj.nutrient.id);
+                    window.location.href = 'view-nutrient.html';
+                }}
+            ]},
         ], '{}':function(){
             const filteredNutrients = [];
             for(let i in this.nutrients)
@@ -61,7 +68,7 @@ const template = {
         ], '{}':function(){
             return this.allergens;
         }},
-    ]},
+    ]}]},
 };
 
 console.log(ingredientId);

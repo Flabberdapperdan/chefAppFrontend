@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./navbar/nav.css">
 
   <!-- Google Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@1&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300;1,400&display=swap"
+    rel="stylesheet">
 
   <title>BellyHut</title>
 </head>
+
 <body>
-  
+
   <nav class="navbar">
     <ul class="navbar-list">
       <li><a href="./index.html">Home</a></li>
@@ -29,4 +34,16 @@
   </nav>
 
 </body>
+
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script>
+  $(function () {
+    $('a').each(function () {
+      if ($(this).prop('href') == window.location.href) {
+        $(this).addClass('current'); $(this).parents('li').addClass('current');
+      }
+    });
+  });
+</script>
+
 </html>

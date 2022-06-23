@@ -10,6 +10,7 @@
   border: 1px solid transparent;
   width: 100%;
   box-shadow: 0 3px 10px 0 rgba(21, 24, 26, .1);
+  background-color: white;
 }
 
 .navbar-list {
@@ -40,6 +41,8 @@ li a {
 }
 
 li a:hover {
+  animation-name: fade;
+  animation-duration: 1.5s;   
   border-bottom: 2px solid #56c048;
   color: rgb(0, 104, 21);
 }
@@ -50,6 +53,23 @@ li:last-child {
   border-left: 1px solid #bbb;
   padding-right: 3px;
 } 
+li .current{
+  color:#56c048;
+  /* background-color: white; */
+  
+  }
+
+/* //Fade effect\\*/
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {opacity: .3} 
+  to {opacity: 1}
+}
 
 /* //GENERAL\\ */
 
